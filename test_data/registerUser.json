@@ -1,0 +1,37 @@
+{
+  "validData": {
+    "scenario": "should register successfully with valid data",
+    "email": "jhon",
+    "password": "Password@123",
+    "confirmPassword": "Password@123",
+    "expected": "success"
+  },
+  "invalidEmail": {
+    "scenario": "should show error for invalid email format",
+    "email": "testuser1@yopmail",
+    "password": "Password@123",
+    "confirmPassword": "Password@123",
+    "expected": "Enter a valid email"
+  },
+  "passwordTooShort": {
+    "scenario": "should show error when password is too short",
+    "email": "testuser2@yopmail.com",
+    "password": "Pass",
+    "confirmPassword": "Pass",
+    "expected": "Password does not meet the requirements below"
+  },
+  "passwordMismatch": {
+    "scenario": "should show error when passwords do not match",
+    "email": "testuser3@yopmail.com",
+    "password": "Password@123",
+    "confirmPassword": "Password@456",
+    "expected": "Passwords do not match"
+  },
+  "alreadyRegistered": {
+    "scenario": "should show error when email is already registered",
+    "email": "david@yopmail.com",
+    "password": "Password@123",
+    "confirmPassword": "Password@123",
+    "expected": "Email already registered"
+  }
+}

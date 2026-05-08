@@ -1,0 +1,15 @@
+{
+    "validUser1": {
+        "email": "david@yopmail.com",
+        "password": "Password@123"
+    },
+    "validUser2": {
+        "email": "smith@yopmail.com",
+        "password": "Password@123"
+    },
+    "invalidUser": {
+        "email": "mark@gmail.com",
+        "password": "Admin@123"
+    }
+    
+}
