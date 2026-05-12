@@ -14,8 +14,6 @@ test("@homepage @regression verify featured events present on home page", async(
             data.validUser1.password
      )
 
-    
-
     await expect(homePage.loginEmailUser).toBeVisible();
     await expect(homePage.featuredEventTitle).toBeVisible()
 

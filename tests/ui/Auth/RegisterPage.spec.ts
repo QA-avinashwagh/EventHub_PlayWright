@@ -1,7 +1,7 @@
 import {test, expect} from "@playwright/test";
-import { RegisterPage } from "../../../pages/RegisterPage";
-import { HomePage } from "../../../pages/HomePage";
-import data from "../../../test_data/registerUser.json";
+import { RegisterPage } from "../../../../pages/RegisterPage";
+import { HomePage } from "../../../../pages/HomePage";
+import data from "../../../../test_data/registerUser.json";
 
 const user = data.validData.email;
 const time = Date.now().toString().slice(-6);

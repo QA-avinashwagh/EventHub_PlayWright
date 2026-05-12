@@ -1,0 +1,57 @@
+[
+  {
+    "title": "Global Tech Summit 2026",
+    "description": "A premier technology conference bringing together 500+ industry leaders, startup founders, and engineers.",
+    "category": "Conference",
+    "city": "Hyderabad",
+    "venue": "Hitech City Convention Centre",
+    "dateAndTime": "2026-06-15T09:00",
+    "price": "1500",
+    "seats": "500",
+    "imageUrl": "https://test.com/tech-summit.png"
+  },
+  {
+    "title": "Dilli Diwali Mela",
+    "description": "Experience the vibrant lights, traditional food, and cultural performances of North India.",
+    "category": "Festival",
+    "city": "Delhi",
+    "venue": "Jawaharlal Nehru Stadium",
+    "dateAndTime": "2026-11-01T17:00",
+    "price": "250",
+    "seats": "2000",
+    "imageUrl": "https://test.com/diwali-mela.png"
+  },
+  {
+    "title": "Rock Underground Live",
+    "description": "An evening of alternative rock featuring local indie bands and guest performers.",
+    "category": "Concert",
+    "city": "Bangalore",
+    "venue": "The Indigo Live Music Bar",
+    "dateAndTime": "2026-07-12T21:00",
+    "price": "800",
+    "seats": "150",
+    "imageUrl": "https://test.com/rock-show.png"
+  },
+  {
+    "title": "Modern Art Workshop",
+    "description": "Learn the basics of abstract painting from award-winning artists in a 4-hour intensive session.",
+    "category": "Workshop",
+    "city": "Mumbai",
+    "venue": "Art Soul Gallery",
+    "dateAndTime": "2026-08-05T10:30",
+    "price": "1200",
+    "seats": "25",
+    "imageUrl": "https://test.com/art-workshop.png"
+  },
+  {
+    "title": "Standup Comedy Night",
+    "description": "A hilarious night of observational comedy featuring a mystery lineup of top-tier comedians.",
+    "category": "Show",
+    "city": "Pune",
+    "venue": "The Laugh Club",
+    "dateAndTime": "2026-09-20T19:30",
+    "price": "499",
+    "seats": "100",
+    "imageUrl": "https://test.com/comedy.png"
+  }
+]

@@ -1,7 +1,7 @@
 import {expect, test} from "@playwright/test"
-import { LoginPage } from "../../../pages/LoginPage"
-import { HomePage } from "../../../pages/HomePage"
-import userData from "../../../test_data/loginUser.json"
+import { LoginPage } from "../../../../pages/LoginPage"
+import { HomePage } from "../../../../pages/HomePage"
+import userData from "../../../../test_data/loginUser.json"
 
 test("@login @sanity should login successfully with valid credentails", async({page})=>{
 
