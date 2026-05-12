@@ -3,9 +3,9 @@ import testData from "../../../test_data/loginUser.json";
 import { EventPage } from "../../../pages/EventPage";
 import { AuthHelper } from "../../../utils/authHelper";
 import { HomePage } from "../../../pages/HomePage";
-import { EventFormComponents } from "../../../pages/EventFormComponent";
+import { EventFormComponent } from "../../../pages/components/EventFormComponent";
 import eventData from "../../../test_data/eventData.json";
-import { EventBookingComponents } from "../../../pages/EventBookingComponents";
+import { EventBookingComponents } from "../../../pages/components/EventBookingComponents";
 
 test("@event @regression should search with valid data ", async ({ page, request }) => {
 
@@ -49,7 +49,7 @@ test("@event @regression on invalid search should show no result found", async (
 })
 
 
-test("@event @regression should able to create event with valid data", async ({ page, request }) => {
+test("@event @regression should able to create event with valid required data", async ({ page, request }) => {
 
     const authHelper = new AuthHelper()
     const homePage = new HomePage(page);
@@ -62,19 +62,19 @@ test("@event @regression should able to create event with valid data", async ({ 
     await expect(homePage.loginEmailUser).toBeVisible();
 
     const eventPage = new EventPage(page);
-    const eventFormComponents = new EventFormComponents(page);
+    const eventFormComponents = new EventFormComponent(page);
 
     await eventPage.goTo();
     await eventPage.clickOnAddNewEvent();
 
     await expect(eventFormComponents.addEventTitle).toBeVisible();
 
-    await eventFormComponents.addEventDetails(eventData[0]);
+    await eventFormComponents.addEventDetails(eventData[4]);
 
-    await expect(eventFormComponents.getToastDisplayed()).toBeVisible();
+    await expect(eventFormComponents.successMsg).toBeVisible();
 
-    await expect(eventFormComponents.getAllEventTitle()).toBeVisible();
-    await expect(eventFormComponents.getEventRow("Sonu Nigam Night")).toBeVisible();
+    await expect(eventFormComponents.allEventsTitle).toBeVisible();
+    await expect(eventFormComponents.getEventRow(eventData[4].title)).toBeVisible();
 
 })
 
@@ -91,7 +91,7 @@ test("@event @regression should able to delete the event after created", async (
     await expect(homePage.loginEmailUser).toBeVisible();
 
     const eventPage = new EventPage(page);
-    const eventFormComponents = new EventFormComponents(page);
+    const eventFormComponents = new EventFormComponent(page);
 
     await eventPage.goTo();
     await eventPage.clickOnAddNewEvent();
@@ -100,12 +100,14 @@ test("@event @regression should able to delete the event after created", async (
 
     await eventFormComponents.addEventDetails(eventData[1]);
 
-    await expect(eventFormComponents.getToastDisplayed()).toBeVisible();
+    await expect(eventFormComponents.successMsg).toBeVisible();
 
-    await expect(eventFormComponents.getAllEventTitle()).toBeVisible();
-    await expect(eventFormComponents.getEventRow("Ed Shreen Night")).toBeVisible();
+    await expect(eventFormComponents.allEventsTitle).toBeVisible();
+    await expect(eventFormComponents.getEventRow("Grand Diwali Carnival")).toBeVisible();
 
-    await expect(eventFormComponents.getEventRow("Ed Shreen Night")).not.toBeVisible();
+    await eventFormComponents.deleteEvent("Grand Diwali Carnival");
+
+    await expect(eventFormComponents.getEventRow("Grand Diwali Carnival")).not.toBeVisible();
 
 })
 
@@ -122,7 +124,7 @@ test("@event @regression should display an error on required field ", async ({ p
     await expect(homePage.loginEmailUser).toBeVisible();
 
     const eventPage = new EventPage(page);
-    const eventFormComponents = new EventFormComponents(page)
+    const eventFormComponents = new EventFormComponent(page)
 
     await eventPage.goTo();
     await eventPage.clickOnAddNewEvent();
@@ -163,8 +165,10 @@ test("@event @regression should displayed correct event price and available seat
 
     expect(eventPrice).toBe(bookEventPrice);
 
-
-
-
-
 })
+
+
+
+
+
+

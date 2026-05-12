@@ -1,7 +1,7 @@
 import { Locator, Page } from "@playwright/test";
-import { EventData } from "../models/EventData";
+import { EventData } from "../../models/EventData";
 
-export class EventFormComponents {
+export class EventFormComponent {
 
     page: Page;
 
@@ -30,6 +30,8 @@ export class EventFormComponents {
     errorPrice: Locator;
     errorSeats: Locator;
 
+    eventTableRow : Locator;
+
     constructor(page: Page) {
         this.page = page;
 
@@ -43,7 +45,7 @@ export class EventFormComponents {
         this.eventDescriptionTextbox = page.getByPlaceholder('Describe the event…');
         this.categoryDropdown = page.getByLabel('Category');
         this.cityInp = page.getByLabel('City');
-        this.venueInp = page.getByLabel('Venu');
+        this.venueInp = page.getByLabel('Venue');
         this.eventDateAndTimeSelect = page.getByLabel("Event Date & Time");
         this.priceInp = page.getByLabel('Price ($)');
         this.seatsInp = page.getByLabel('Total Seats');
@@ -62,9 +64,11 @@ export class EventFormComponents {
         //event listing in creating page 
         this.allEventsTitle = page.getByRole("heading", { name: "All Events" });
 
+        //all rows 
+        this.eventTableRow = page.getByTestId('event-table-row')
+
         // Delete event Modal 
         this.eventDialog = page.getByRole('dialog');
-
     }
 
     async addEventDetails(eventData : EventData) {
@@ -77,8 +81,10 @@ export class EventFormComponents {
         await this.eventDateAndTimeSelect.fill(eventData.dateAndTime);
         await this.priceInp.fill(eventData.price);
         await this.seatsInp.fill(eventData.seats);
+        
+        if(eventData.imageUrl){
         await this.imageUrl.fill(eventData.imageUrl);
-
+        }
         await this.addEventBtn.click();
     }
 
@@ -86,16 +92,8 @@ export class EventFormComponents {
         await this.addEventBtn.click();
     }
 
-    getToastDisplayed() {
-        return this.successMsg;
-    }
-
-    getAllEventTitle() {
-        return this.allEventsTitle;
-    }
-
     getEventRow(eventName: string) {
-        const row = this.page.getByRole('row').filter({ hasText: eventName });
+        const row = this.eventTableRow.filter({ hasText: eventName });
         return row;
     }
 
@@ -113,7 +111,7 @@ export class EventFormComponents {
             .click();
     }
 
-    isDeleteEventDialogPresent() {
+    getEventDeleteDialog() {
         const title = this.eventDialog.getByRole('heading', { name: "Delete this event?" });
         return title;
     }

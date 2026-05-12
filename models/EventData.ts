@@ -8,5 +8,5 @@ export interface EventData {
    dateAndTime: string;
    price: string;
    seats: string;
-   imageUrl: string;
+   imageUrl?: string;
 }

@@ -11,7 +11,7 @@
     "imageUrl": "https://test.com/tech-summit.png"
   },
   {
-    "title": "Dilli Diwali Mela",
+    "title": "Grand Diwali Carnival",   
     "description": "Experience the vibrant lights, traditional food, and cultural performances of North India.",
     "category": "Festival",
     "city": "Delhi",
@@ -44,14 +44,13 @@
     "imageUrl": "https://test.com/art-workshop.png"
   },
   {
-    "title": "Standup Comedy Night",
-    "description": "A hilarious night of observational comedy featuring a mystery lineup of top-tier comedians.",
-    "category": "Show",
-    "city": "Pune",
-    "venue": "The Laugh Club",
-    "dateAndTime": "2026-09-20T19:30",
-    "price": "499",
-    "seats": "100",
-    "imageUrl": "https://test.com/comedy.png"
-  }
+  "title": "IPL Pro League Finals",
+  "description": "Watch the top two teams battle for the championship trophy in an electric atmosphere with live commentary.",
+  "category": "Sports",
+  "city": "Mumbai",
+  "venue": "Wankhede Stadium",
+  "dateAndTime": "2026-05-24T19:00",
+  "price": "2500",
+  "seats": "45000"
+}
 ]

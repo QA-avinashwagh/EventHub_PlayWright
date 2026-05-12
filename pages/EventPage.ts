@@ -1,9 +1,7 @@
 import { Locator, Page } from "@playwright/test";
-
 export class EventPage {
 
     page: Page;
-    eventLink: Locator;
     addNewEventBtn: Locator;
 
     // search input and filters 
@@ -16,13 +14,12 @@ export class EventPage {
 
     constructor(page: Page) {
         this.page = page;
-        this.eventLink = page.getByTestId('nav-events');
         this.addNewEventBtn = page.getByRole("button", { name: "Add New Event" });
 
         //Seach inputs and filters
         this.searchInp = page.getByPlaceholder("Search events, venues…");
-        this.categoriesDropDown = page.getByRole('combobox').filter({ hasText: "All Categoreis" });
-        this.citiesDropDown = page.getByRole('combobox').filter({ hasText: "All Cities" });
+        this.categoriesDropDown = page.getByRole('combobox').nth(0);
+        this.citiesDropDown = page.getByRole('combobox').nth(0);
         this.clearFilterBtn = page.getByRole('button', { name: "Clear filters" });
         this.noEventResult = page.getByRole('heading', { name: "No events found" });
         this.eventCard = page.getByTestId('event-card');
@@ -47,24 +44,28 @@ export class EventPage {
         return isVisible;
     }
 
+    getEventCard(eventName: string) {
+        return this.eventCard.filter({ hasText: eventName });
+    }
+
     async getEventPrice(eventName: string) {
-        const event = this.eventCard.filter({ hasText: eventName });
-        const priceText = await event.locator('p').textContent();
+        const event = this.getEventCard(eventName);
+        const priceText = await event.getByText(/^\$/).textContent();
         if (!priceText) throw new Error(`Could not find price for event: ${eventName}`);
         const price = priceText.replace(/[^0-9.]/g, '');
         return parseFloat(price);
     }
 
     async getAvailableSeats(eventName: string) {
-        const event = this.eventCard.filter({ hasText: eventName });
-        const avilSeatText = await event.locator('span').textContent();
-        if (!avilSeatText) throw new Error(`Could not find seats for event: ${eventName}`);
-        const availableSeats = avilSeatText.replace(/[^0-9.]/g, '');
+        const event = this.getEventCard(eventName);
+        const availableSeatText = await event.getByText(/seats avialable/i).textContent();
+        if (!availableSeatText) throw new Error(`Could not find seats for event: ${eventName}`);
+        const availableSeats = availableSeatText.replace(/[^0-9.]/g, '');
         return parseFloat(availableSeats);
     }
 
     async clickOnBookTickets(eventName: string) {
-        const event = this.eventCard.filter({ hasText: eventName });
+        const event = this.getEventCard(eventName);
         await event.getByRole('link', { name: "Book Now" }).click();
     }
 
