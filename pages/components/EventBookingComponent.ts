@@ -55,12 +55,21 @@ export class EventBookingComponent {
         //error on user details 
         // This finds the parent container that has the "Full Name" label,
         // then finds the red error paragraph inside it.
-        this.errorFullname = page.locator('div', { has: page.getByLabel('Full Name') }).locator('p.text-red-600');
-        this.errorEmail = page.locator('div', { has: page.getByLabel('Email') }).locator('p.text-red-600');
-        this.errorPhoneNum = page.locator('div', { has: page.getByLabel('Phone Number') }).locator('p.text-red-600');
+        this.errorFullname = page.locator('div')
+            .filter({has: page.getByLabel('Full Name')})
+            .locator('p.text-red-600')
+            .filter({hasText :/name/i});
+        this.errorEmail = page.locator('div')
+            .filter({ has: page.getByLabel('Email') })
+            .locator('p.text-red-600')
+            .filter({hasText:/email/i});
+        this.errorPhoneNum = page.locator('div')
+            .filter({ has: page.getByLabel('Phone Number')})
+            .locator('p.text-red-600')
+            .filter({hasText:/phone/i});
 
         //total price 
-        this.totalPriceTxt = page.getByText("Total");
+        this.totalPriceTxt = page.locator('div', {has: page.getByText('Total')});
         this.confirmBookingBtn = page.getByRole('button', { name: "Confirm Booking" });
 
         //confirm booking 
@@ -79,6 +88,11 @@ export class EventBookingComponent {
         await this.reduceTicket.click();
     }
 
+    async getCurrentTicketCount() :Promise <number>{
+        const text = await this.currentTicketCount.textContent();
+        return parseInt(text ?? '0' , 10)
+    }
+
     private async extractTextFromDetails(locator: Locator, fieldName: string): Promise<string> {
         const text = await locator.locator('p').nth(1).textContent();
 
@@ -86,7 +100,7 @@ export class EventBookingComponent {
         return text.trim();
     }
 
-    async getBookingEventPrice(): Promise<number> {
+    async getBookingEventPricePerTicket(): Promise<number> {
         const price = await this.extractTextFromDetails(this.bookingTicketPrice, "Price");
 
         const cleanPrice = price.replace(/[^0-9.]/g, '');
@@ -119,12 +133,15 @@ export class EventBookingComponent {
 
     async getBookingEventSeats(): Promise<number> {
         const seatsText = await this.extractTextFromDetails(this.bookingTicketAvailability, "Seats");
-        const seats = seatsText.replace(/[^0-9.]/g, '');
+        const splittext = seatsText?.split("/");
+        const availableSeat = splittext?.at(0);
+        if (!availableSeat) throw new Error("could not spilt the available seat");
+        const seats = availableSeat.replace(/[^0-9.]/g, '');
         const seat = parseInt(seats);
-        if (isNaN(seat)) {
-            throw new Error("Unable to parse the booking seats");
+        if(isNaN(seat)){
+            throw new Error("Seat is not able to parse");
         }
-        return seat;
+        return seat; 
     }
 
     async getPricePerTicket(): Promise<number> {
@@ -139,7 +156,7 @@ export class EventBookingComponent {
     }
 
     async getTotalPrice(): Promise<number> {
-        const totalPrice = await this.totalPriceTxt.getByText(/^\$/).textContent();
+        const totalPrice = await this.totalPriceTxt.getByText(/^\$/).last().textContent();
 
         if (!totalPrice) throw Error("total price not appeared on the page");
         const price = totalPrice.replace(/[^0-9.]/g, '');

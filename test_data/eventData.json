@@ -1,5 +1,5 @@
-[
-  {
+{
+  "techSummit": {
     "title": "Global Tech Summit 2026",
     "description": "A premier technology conference bringing together 500+ industry leaders, startup founders, and engineers.",
     "category": "Conference",
@@ -10,8 +10,8 @@
     "seats": "500",
     "imageUrl": "https://test.com/tech-summit.png"
   },
-  {
-    "title": "Grand Diwali Carnival",   
+  "diwaliCarnival": {
+    "title": "Grand Diwali Carnival",
     "description": "Experience the vibrant lights, traditional food, and cultural performances of North India.",
     "category": "Festival",
     "city": "Delhi",
@@ -21,7 +21,7 @@
     "seats": "2000",
     "imageUrl": "https://test.com/diwali-mela.png"
   },
-  {
+  "rockConcert": {
     "title": "Rock Underground Live",
     "description": "An evening of alternative rock featuring local indie bands and guest performers.",
     "category": "Concert",
@@ -32,7 +32,7 @@
     "seats": "150",
     "imageUrl": "https://test.com/rock-show.png"
   },
-  {
+  "artWorkshop": {
     "title": "Modern Art Workshop",
     "description": "Learn the basics of abstract painting from award-winning artists in a 4-hour intensive session.",
     "category": "Workshop",
@@ -43,14 +43,14 @@
     "seats": "25",
     "imageUrl": "https://test.com/art-workshop.png"
   },
-  {
-  "title": "IPL Pro League Finals",
-  "description": "Watch the top two teams battle for the championship trophy in an electric atmosphere with live commentary.",
-  "category": "Sports",
-  "city": "Mumbai",
-  "venue": "Wankhede Stadium",
-  "dateAndTime": "2026-05-24T19:00",
-  "price": "2500",
-  "seats": "45000"
+  "iplFinals": {
+    "title": "IPL Pro League Finals",
+    "description": "Watch the top two teams battle for the championship trophy in an electric atmosphere with live commentary.",
+    "category": "Sports",
+    "city": "Mumbai",
+    "venue": "Wankhede Stadium",
+    "dateAndTime": "2026-05-24T19:00",
+    "price": "2500",
+    "seats": "45000"
+  }
 }
-]

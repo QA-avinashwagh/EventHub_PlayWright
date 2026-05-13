@@ -58,7 +58,7 @@ export class EventPage {
 
     async getAvailableSeats(eventName: string) {
         const event = this.getEventCard(eventName);
-        const availableSeatText = await event.getByText(/seats avialable/i).textContent();
+        const availableSeatText = await event.getByText(/seats available/i).textContent();
         if (!availableSeatText) throw new Error(`Could not find seats for event: ${eventName}`);
         const availableSeats = availableSeatText.replace(/[^0-9.]/g, '');
         return parseFloat(availableSeats);
