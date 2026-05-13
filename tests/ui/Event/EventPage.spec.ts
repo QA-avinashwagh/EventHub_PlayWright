@@ -5,7 +5,7 @@ import { AuthHelper } from "../../../utils/authHelper";
 import { HomePage } from "../../../pages/HomePage";
 import { EventFormComponent } from "../../../pages/components/EventFormComponent";
 import eventData from "../../../test_data/eventData.json";
-import { EventBookingComponents } from "../../../pages/components/EventBookingComponents";
+import { EventBookingComponent } from "../../../pages/components/EventBookingComponent";
 
 test("@event @regression should search with valid data ", async ({ page, request }) => {
 
@@ -153,7 +153,7 @@ test("@event @regression should displayed correct event price and available seat
     await expect(homePage.loginEmailUser).toBeVisible();
 
     const eventPage = new EventPage(page);
-    const eventBookingComponent = new EventBookingComponents(page)
+    const eventBookingComponent = new EventBookingComponent(page)
 
     await eventPage.goTo();
 
@@ -161,7 +161,7 @@ test("@event @regression should displayed correct event price and available seat
 
     await eventPage.clickOnBookTickets("World Tech Summit");
 
-    const bookEventPrice = await eventBookingComponent.getBookEventPrice();;
+    const bookEventPrice = await eventBookingComponent.getBookingEventPrice();
 
     expect(eventPrice).toBe(bookEventPrice);
 
