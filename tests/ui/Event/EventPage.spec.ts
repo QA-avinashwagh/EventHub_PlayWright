@@ -1,170 +1,89 @@
-import { test, expect, request } from "@playwright/test";
-import testData from "../../../test_data/loginUser.json";
-import { EventPage } from "../../../pages/EventPage";
-import { AuthHelper } from "../../../utils/authHelper";
-import { HomePage } from "../../../pages/HomePage";
-import { EventFormComponent } from "../../../pages/components/EventFormComponent";
+import { test, expect} from "../../../fixtures/baseFixture";
 import eventData from "../../../test_data/eventData.json";
-import { EventBookingComponent } from "../../../pages/components/EventBookingComponent";
 
-test("@event @regression should search with valid data ", async ({ page, request }) => {
-
-    const authHelper = new AuthHelper()
-    const homePage = new HomePage(page);
-
-    await authHelper.loginViaAPI(request, page,
-        testData.validUser1.email,
-        testData.validUser1.password
-    )
+test.describe('Search Event', () =>{ 
+test("@event @regression should be able to search with valid data ", async ({authSetup,  homePage, eventPage }) => {
 
     await expect(homePage.loginEmailUser).toBeVisible();
-
-    const eventPage = new EventPage(page);
 
     await eventPage.goTo();
     await eventPage.searchEvent("World Tech Summit");
     await expect (eventPage.getEventCard("World Tech Summit")).toBeVisible();
-})
+});
 
-test("@event @regression on invalid search should show no result found", async ({ page, request }) => {
-
-    const authHelper = new AuthHelper()
-    const homePage = new HomePage(page);
-
-    await authHelper.loginViaAPI(request, page,
-        testData.validUser1.email,
-        testData.validUser1.password
-    )
+test("@event @regression on invalid search should be ablet to show no result found", async ({authSetup, homePage, eventPage}) =>{ 
 
     await expect(homePage.loginEmailUser).toBeVisible();
-
-    const eventPage = new EventPage(page);
 
     await eventPage.goTo();
     await eventPage.searchEvent("Tech123NonExists");
     await expect (eventPage.noEventResult).toBeVisible();
     
-})
+});
+});
 
-test("@event @regression should able to create event with valid required data", async ({ page, request }) => {
-
-    const authHelper = new AuthHelper()
-    const homePage = new HomePage(page);
-
-    await authHelper.loginViaAPI(request, page,
-        testData.validUser1.email,
-        testData.validUser1.password
-    )
-
-    await expect(homePage.loginEmailUser).toBeVisible();
-
-    const eventPage = new EventPage(page);
-    const eventFormComponents = new EventFormComponent(page);
+test.describe('Event Creation',  ()=> {
+test("@event @regression should be able to create event with valid required data", async ({authSetup, homePage, eventPage, eventFormComponent }) => {
 
     await eventPage.goTo();
     await eventPage.clickOnAddNewEvent();
 
-    await expect(eventFormComponents.addEventTitle).toBeVisible();
+    await expect(eventFormComponent.addEventTitle).toBeVisible();
 
-    await eventFormComponents.addEventDetails(eventData.iplFinals);
+    await eventFormComponent.addEventDetails(eventData.iplFinals);
 
-    await expect(eventFormComponents.successMsg).toBeVisible();
+    await expect(eventFormComponent.successMsg).toBeVisible();
 
-    await expect(eventFormComponents.allEventsTitle).toBeVisible();
-    await expect(eventFormComponents.getEventRow(eventData.iplFinals.title)).toBeVisible();
+    await expect(eventFormComponent.allEventsTitle).toBeVisible();
+    await expect(eventFormComponent.getEventRow(eventData.iplFinals.title)).toBeVisible();
+});
 
-})
-
-test("@event @regression should able to delete the event after created", async ({ page, request }) => {
-
-    const authHelper = new AuthHelper()
-    const homePage = new HomePage(page);
-
-    await authHelper.loginViaAPI(request, page,
-        testData.validUser1.email,
-        testData.validUser1.password
-    )
-
-    await expect(homePage.loginEmailUser).toBeVisible();
-
-    const eventPage = new EventPage(page);
-    const eventFormComponents = new EventFormComponent(page);
+test("@event @regression should be able to delete the event after created", async ({authSetup, homePage, eventPage, eventFormComponent}) => {
 
     await eventPage.goTo();
     await eventPage.clickOnAddNewEvent();
 
-    await expect(eventFormComponents.addEventTitle).toBeVisible();
+    await expect(eventFormComponent.addEventTitle).toBeVisible();
 
-    await eventFormComponents.addEventDetails(eventData.rockConcert);
+    await eventFormComponent.addEventDetails(eventData.rockConcert);
 
-    await expect(eventFormComponents.successMsg).toBeVisible();
+    await expect(eventFormComponent.successMsg).toBeVisible();
 
-    await expect(eventFormComponents.allEventsTitle).toBeVisible();
-    await expect(eventFormComponents.getEventRow(eventData.rockConcert.title)).toBeVisible();
+    await expect(eventFormComponent.allEventsTitle).toBeVisible();
+    await expect(eventFormComponent.getEventRow(eventData.rockConcert.title)).toBeVisible();
 
-    await eventFormComponents.deleteEvent(eventData.rockConcert.title);
+    await eventFormComponent.deleteEvent(eventData.rockConcert.title);
+    await expect(eventFormComponent.getEventRow(eventData.rockConcert.title)).not.toBeVisible();
+});
 
-    await expect(eventFormComponents.getEventRow(eventData.rockConcert.title)).not.toBeVisible();
-
-})
-
-test("@event @regression should be able to display an error on required field", async ({ page, request }) => {
-
-    const authHelper = new AuthHelper()
-    const homePage = new HomePage(page);
-
-    await authHelper.loginViaAPI(request, page,
-        testData.validUser1.email,
-        testData.validUser1.password
-    )
-
-    await expect(homePage.loginEmailUser).toBeVisible();
-
-    const eventPage = new EventPage(page);
-    const eventFormComponents = new EventFormComponent(page)
-
+test("@event @regression should be able to display an error on required field", async ({authSetup, eventPage, eventFormComponent}) => {
+    
     await eventPage.goTo();
     await eventPage.clickOnAddNewEvent();
 
-    await eventFormComponents.clickOnAddEvent();
+    await eventFormComponent.clickOnAddEvent();
 
-    await expect(eventFormComponents.errorTitle).toBeVisible();
-    await expect(eventFormComponents.errorCity).toBeVisible();
-    await expect(eventFormComponents.errorDate).toBeVisible();
-    await expect(eventFormComponents.errorPrice).toBeVisible();
-    await expect(eventFormComponents.errorVenue).toBeVisible();
-    await expect(eventFormComponents.errorSeats).toBeVisible();
+    await expect(eventFormComponent.errorTitle).toBeVisible();
+    await expect(eventFormComponent.errorCity).toBeVisible();
+    await expect(eventFormComponent.errorDate).toBeVisible();
+    await expect(eventFormComponent.errorPrice).toBeVisible();
+    await expect(eventFormComponent.errorVenue).toBeVisible();
+    await expect(eventFormComponent.errorSeats).toBeVisible();
+});
 
-})
-
-test("@event @regression after event creation should displayed correct details on the booking page", async({page , request})=>{
-
-    const authHelper = new AuthHelper()
-    const homePage = new HomePage(page);
-
-    await authHelper.loginViaAPI(request, page,
-        testData.validUser1.email,
-        testData.validUser1.password
-    )
-
-    await expect(homePage.loginEmailUser).toBeVisible();
-
-    const eventPage = new EventPage(page);
-    const eventFormComponents = new EventFormComponent(page);
-    const eventBookingComponent = new EventBookingComponent(page)
-
+test("@event @regression after event creation should displayed correct details on the booking page", async({authSetup, homePage, eventPage, eventFormComponent, eventBookingComponent})=>{
+    
     await eventPage.goTo();
-
     await eventPage.clickOnAddNewEvent();
 
-    await expect(eventFormComponents.addEventTitle).toBeVisible();
+    await expect(eventFormComponent.addEventTitle).toBeVisible();
 
-    await eventFormComponents.addEventDetails(eventData.diwaliCarnival);
+    await eventFormComponent.addEventDetails(eventData.diwaliCarnival);
 
-    await expect(eventFormComponents.successMsg).toBeVisible();
+    await expect(eventFormComponent.successMsg).toBeVisible();
 
-    await expect(eventFormComponents.allEventsTitle).toBeVisible();
-    await expect(eventFormComponents.getEventRow(eventData.diwaliCarnival.title)).toBeVisible();
+    await expect(eventFormComponent.allEventsTitle).toBeVisible();
+    await expect(eventFormComponent.getEventRow(eventData.diwaliCarnival.title)).toBeVisible();
 
     await eventPage.goTo();
 
@@ -184,52 +103,26 @@ test("@event @regression after event creation should displayed correct details o
     const bookingEventCity = await eventBookingComponent.getBookingEventCity();
     const bookingEventVenue = await eventBookingComponent.getBookingEventVenue();
 
-
     expect(bookingEventPrice).toBe(actualPrice);
     expect(bookingEventSeats).toBe(actualSeats);
     expect(bookingEventCity).toBe(eventData.diwaliCarnival.city);
     expect(bookingEventVenue).toBe(eventData.diwaliCarnival.venue);
 
 });
+})
 
-
-test("@regression @bookingevent should be able to booked event sucessfully", async({page, request})=>{
-
-    const authHelper = new AuthHelper()
-    const homePage = new HomePage(page);
-
-    await authHelper.loginViaAPI(request, page,
-        testData.validUser1.email,
-        testData.validUser1.password
-    )
-
-    await expect(homePage.loginEmailUser).toBeVisible();
-
-    const eventPage = new EventPage(page);
-    const eventBookingComponent = new EventBookingComponent(page)
+test.describe('Event Booking', () => {
+test("@regression @bookingevent should be able to booked event sucessfully", async({authSetup, homePage, eventPage, eventBookingComponent})=>{
 
     await eventPage.goTo();
     await eventPage.clickOnBookTickets("Hollywood Monsoon Night — Los Angeles");
     await eventBookingComponent.addBookingDetails("David Mathew", "david@yopamail.com", "+91 910 616 2016")
+    
     await expect (eventBookingComponent.confirmBookingText).toBeVisible();
 
 });
 
-test("@regression @bookingevent should be able to book event more than 1 ticket", async ({page, request})=>{
-
-
-    const authHelper = new AuthHelper()
-    const homePage = new HomePage(page);
-
-    await authHelper.loginViaAPI(request, page,
-        testData.validUser1.email,
-        testData.validUser1.password
-    )
-
-    await expect(homePage.loginEmailUser).toBeVisible();
-
-    const eventPage = new EventPage(page);
-    const eventBookingComponent = new EventBookingComponent(page)
+test("@regression @bookingevent should be able to book event more than 1 ticket", async ({authSetup, homePage, eventPage, eventBookingComponent })=>{
 
     await eventPage.goTo();
     await eventPage.clickOnBookTickets("Hollywood Monsoon Night — Los Angeles");
@@ -246,20 +139,7 @@ test("@regression @bookingevent should be able to book event more than 1 ticket"
 });
 
 
-test("@regression @booking should display error on invalid input for booking details", async({page, request})=>{
-
-    const authHelper = new AuthHelper()
-    const homePage = new HomePage(page);
-
-    await authHelper.loginViaAPI(request, page,
-        testData.validUser1.email,
-        testData.validUser1.password
-    )
-
-    await expect(homePage.loginEmailUser).toBeVisible();
-
-    const eventPage = new EventPage(page);
-    const eventBookingComponent = new EventBookingComponent(page)
+test("@regression @booking should display error on invalid input for booking details", async({authSetup, homePage, eventPage, eventBookingComponent})=>{
 
     await eventPage.goTo();
     await eventPage.clickOnBookTickets("Hollywood Monsoon Night — Los Angeles");
@@ -270,5 +150,4 @@ test("@regression @booking should display error on invalid input for booking det
     await expect(eventBookingComponent.errorEmail).toBeVisible();
     await expect(eventBookingComponent.errorPhoneNum).toBeVisible();
 });
-
-
+})

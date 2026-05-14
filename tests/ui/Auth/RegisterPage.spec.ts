@@ -1,18 +1,12 @@
-import {test, expect} from "@playwright/test";
-import { RegisterPage } from "../../../../pages/RegisterPage";
-import { HomePage } from "../../../../pages/HomePage";
-import data from "../../../../test_data/registerUser.json";
+import {test, expect} from "../../../fixtures/baseFixture";
+import data from "../../../test_data/registerUser.json";
 
 const user = data.validData.email;
 const time = Date.now().toString().slice(-6);
 const userEmail = `${user}_${time}@yopmail.com`;
 
-
-test("@register @sanity should register successfully with valid user data ", async({page})=>{
+test("@register @sanity should register successfully with valid user data ", async({registerPage, homePage})=>{
     
-    const registerPage = new RegisterPage(page);
-    const homePage = new HomePage(page);
-
     await registerPage.navigate();
     
     await registerPage.createAccount(userEmail, data.validData.password, data.validData.confirmPassword);
@@ -20,9 +14,7 @@ test("@register @sanity should register successfully with valid user data ", asy
     await expect (homePage.myBookingLink).toBeVisible();
 });
 
-test("@register @regression should show error on invalid email", async({page})=>{
-    
-    const registerPage = new RegisterPage(page);
+test("@register @regression should show error on invalid email", async({registerPage})=>{
     
     await registerPage.navigate();
     
@@ -31,9 +23,7 @@ test("@register @regression should show error on invalid email", async({page})=>
     await expect (registerPage.invalidEmailMsg).toHaveText(data.invalidEmail.expected);
 });
 
-test("@register @regression should show validation error when password does not meet requirement", async({page})=>{
-    
-    const registerPage = new RegisterPage(page);
+test("@register @regression should show validation error when password does not meet requirement", async({registerPage})=>{
     
     await registerPage.navigate();
     
@@ -42,9 +32,7 @@ test("@register @regression should show validation error when password does not 
     await expect (registerPage.invalidPasswordReqmMsg).toHaveText(data.passwordTooShort.expected);
 });
 
-test("@register @regression should show error when passwords does not match", async({page})=>{
-    
-    const registerPage = new RegisterPage(page);
+test("@register @regression should show error when passwords does not match", async({registerPage})=>{
     
     await registerPage.navigate();
     
@@ -53,10 +41,8 @@ test("@register @regression should show error when passwords does not match", as
     await expect (registerPage.passwordUnMatchMsg).toHaveText(data.passwordMismatch.expected);
 });
 
-test("@register @regression should show error on already register email", async({page})=>{
-    
-    const registerPage = new RegisterPage(page);
-    
+test("@register @regression should show error on already register email", async({registerPage})=>{
+     
     await registerPage.navigate();
     
     await registerPage.createAccount(data.alreadyRegistered.email, data.alreadyRegistered.password, data.alreadyRegistered.confirmPassword);
