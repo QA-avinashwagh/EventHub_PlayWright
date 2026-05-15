@@ -1,0 +1,29 @@
+{
+  "Details": {
+    "davidUser": {
+      "fullName": "David Mathew",
+      "email": "david@yopmail.com",
+      "phoneNumber": "+91 91061 62016"
+    },
+    "emmaUser": {
+      "fullName": "Emma Watson",
+      "email": "emma.watson@example.com",
+      "phoneNumber": "+1 55501 92834"
+    },
+    "rahulUser": {
+      "fullName": "Rahul Sharma",
+      "email": "rahul.sharma@testmail.in",
+      "phoneNumber": "+91 98765 43210"
+    },
+    "sarahUser": {
+      "fullName": "Sarah Connor",
+      "email": "s.connor@cyberdyne.org",
+      "phoneNumber": "+1 41555 52671"
+    },
+    "liUser": {
+      "fullName": "Li Wei",
+      "email": "li.wei@example.com",
+      "phoneNumber": "+86 13912 34567"
+    }
+  }
+}

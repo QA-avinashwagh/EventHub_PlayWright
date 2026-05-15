@@ -11,6 +11,7 @@ export class BookingDetailsPage {
     checkEligibilityRefundBtn: Locator;
     refundSpinner: Locator;
     refundResult: Locator;
+    referanceId : Locator; 
 
     constructor(page: Page) {
         this.page = page;
@@ -27,6 +28,14 @@ export class BookingDetailsPage {
         this.checkEligibilityRefundBtn = page.getByTestId('check-refund-btn');
         this.refundSpinner = page.getByTestId('refund-spinner');
         this.refundResult = page.getByTestId('refund-result');
+        this.referanceId = page.locator('div', {has:page.getByText(/confirmed/i)}).locator('span');
+    }
+
+
+    async getRefID(): Promise<string>{
+        const refid = await this.referanceId.first().textContent();
+        if(!refid) throw new Error("Refernce id does not found booking detail page"); 
+        return refid;
     }
 
     async clickOnCancelBtn() {

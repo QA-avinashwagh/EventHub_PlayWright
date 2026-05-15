@@ -1,4 +1,40 @@
 {
+  "defaulDiwali": {
+    "title": "Dilli Diwali Mela",
+    "description": "Celebrate the Festival of Lights at the grandest Diwali Mela in North India. Enjoy 200+ stalls of artisanal crafts, street food, folk performances, fireworks, and cultural showcases spanning three vibrant evenings.",
+    "category": "Festival",
+    "city": "Delhi",
+    "venue": "Pragati Maidan Exhibition Grounds",
+    "date": "Tuesday, 20 October",
+    "Time" : "10:30 pm",
+    "price": "300",
+    "seats": "10000",
+    "imageUrl": "https://test.com/diwali-mela.png"
+  },
+  "defaultMonsoon": {
+    "title": "Hollywood Monsoon Night — Los Angeles",
+    "description": "An unforgettable evening of live music performed by A-list playback singers under the open Mumbai sky. Featuring chart-toppers from the last three decades with a stunning light show and pyrotechnics.",
+    "category": "Concert",
+    "city": "Los Angeles",
+    "venue": "Dome, NSCI SVP Stadium, Worli",
+    "date": "Sunday, 12 July",
+    "Time" : "12:30 pm",
+    "price": "2500",
+    "seats": "2991",
+    "imageUrl": "https://test.com/rock-show.png"
+  },
+  "defaultSummit": {
+    "title": "World Tech Summit",
+    "description": "A premier technology conference bringing together 500+ industry leaders, startup founders, and engineers for two days of keynotes, workshops, and networking. Topics include AI/ML, cloud infrastructure, DevSecOps, and the future of the Indian tech ecosystem.",
+    "category": "Conference",
+    "city": "Hyderabad",
+    "venue": "Hyderabad, Hitech city",
+    "date": "Saturday, 18 April",
+    "Time" : "2:30 pm",
+    "price": "1500",
+    "seats": "500",
+    "imageUrl": "https://test.com/tech-summit.png"
+  },
   "techSummit": {
     "title": "Global Tech Summit 2026",
     "description": "A premier technology conference bringing together 500+ industry leaders, startup founders, and engineers.",

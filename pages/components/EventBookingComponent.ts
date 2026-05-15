@@ -28,6 +28,7 @@ export class EventBookingComponent {
     totalPriceTxt: Locator
 
     confirmBookingText: Locator;
+    viewMyBookingBtn : Locator;
     refIdText: Locator;
 
     constructor(page: Page) {
@@ -75,6 +76,8 @@ export class EventBookingComponent {
         //confirm booking 
         this.confirmBookingText = page.getByRole('heading', { name: "Booking Confirmed! 🎉" });
 
+        this.viewMyBookingBtn = page.getByRole('link', {name: "View My Bookings"});
+        
         //refrence id 
         this.refIdText = page.locator('.booking-ref');
 
@@ -182,6 +185,10 @@ export class EventBookingComponent {
 
     async getBookingRefId() {
         return await this.refIdText.textContent();
+    }
+
+    async clickOnViewBooking (){
+        await this.viewMyBookingBtn.click();
     }
 
 }

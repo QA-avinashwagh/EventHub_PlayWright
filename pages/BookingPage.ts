@@ -9,7 +9,6 @@ export class BookingPage {
     browseEventBtn : Locator;
     clearAllBookingBtn : Locator;
     bookingCard : Locator;
-    
     cancelDialog : Locator; 
 
 
@@ -62,6 +61,12 @@ export class BookingPage {
         
         if (!text) throw new Error(`Event ${eventName} is not found on the page`);
         return text.trim();        
+    }
+
+    async getRefernceId(eventName : string) : Promise<string>{
+        const refId = await this.getEventCard(eventName).locator('div', {has: this.page.getByTestId('booking-id')}).locator('span').first().textContent();
+        if(!refId)throw new Error(`Refernce ID not found on the event ${eventName}`);
+        return refId;
     }
 
     async getEventDate(eventName :string) : Promise <string>{
