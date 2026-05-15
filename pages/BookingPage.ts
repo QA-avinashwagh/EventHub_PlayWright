@@ -1,6 +1,6 @@
 import { Locator, Page } from "@playwright/test";
 
-class BookingPage {
+export class BookingPage {
 
     page : Page
     bookingTitle : Locator;
@@ -25,7 +25,7 @@ class BookingPage {
         this.cancelDialog = page.getByRole('dialog', {name: "Cancel this booking?"});
     }
 
-    async goToBooking(){
+    async goTo(){
         await this.page.goto('/bookings');
     }
 
@@ -37,46 +37,52 @@ class BookingPage {
         await this.browseEventBtn.click();
     }
 
-    async isEventPresent(eventName : string){
-       return this.bookingCard.filter({hasText :eventName}).isVisible();
-    }
-
     getEventCard(eventName : string){
         return this.bookingCard.filter({hasText:eventName});
     }
 
-    async clickOnViewDetils(eventName : string){
+    async clickOnViewDetails(eventName : string){
         await this.getEventCard(eventName).getByRole('button',{name:/View Details/i}).click();
     }
 
     async clickOnCancelBooking(eventName : string){
-        await this.getEventCard(eventName).getByRole('button', {name:/Cancel Bookings/i}).click();
+        await this.getEventCard(eventName).getByRole('button', {name:/Cancel Booking/i}).click();
     }
 
-    async clickOnYesCancelItOnCancelDialog(){
+    async confirmCancelBooking(){
         await this.cancelDialog.getByRole('button', {name: /Yes, cancel it/i}).click();
     }
 
-    async clickOnCancelOnCanelBookingDialog(){
+    async dismissCancelBooking(){
         await this.cancelDialog.getByRole('button', {name: /Cancel/i}).click(); 
     }
 
-    async getEventDate(eventName :string){
-        await this.getEventCard(eventName).locator('span').first().textContent();
+    private async extractTextFromCard(eventName :string, i : number){
+        const text = await this.getEventCard(eventName).locator('span').nth(i).textContent();
+        
+        if (!text) throw new Error(`Event ${eventName} is not found on the page`);
+        return text.trim();        
     }
 
-    async getBookedEventTicketCount(eventName : string){
-        await this.getEventCard(eventName).locator('span').nth(2).textContent();
+    async getEventDate(eventName :string) : Promise <string>{
+       const date = await this.extractTextFromCard(eventName,1);
+       return date;
     }
 
-    async getBookedEventVenue(eventName: string){
-        await this.getEventCard(eventName).locator('span').nth(3).textContent();
+    async getBookedEventTicketCount(eventName : string): Promise <string>{
+      const ticket = await this.extractTextFromCard(eventName, 2);
+      return ticket;
     }
 
-    async getBookedEventDate(eventName : string){
-        await this.getEventCard(eventName).locator('span').nth(4).textContent();
+    async getBookedEventVenue(eventName: string) : Promise <string>{
+        const venue =await this.extractTextFromCard(eventName,3)
+        return venue;
     }
 
+    async getBookedEventDate(eventName : string): Promise <string>{
+        const date = await this.extractTextFromCard(eventName, 4);
+        return date;
+    }
 
 
 }

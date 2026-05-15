@@ -7,6 +7,8 @@ import { EventFormComponent } from "../pages/components/EventFormComponent";
 import { AuthHelper } from "../utils/authHelper"
 import testData from "../test_data/loginUser.json"
 import { RegisterPage } from "../pages/RegisterPage"
+import { BookingPage } from "../pages/BookingPage"
+import { BookingDetailsPage } from "../pages/BookingDetailPage"
 
 type MyFixtures = {
     loginPage: LoginPage;
@@ -17,7 +19,8 @@ type MyFixtures = {
     eventBookingComponent: EventBookingComponent;
     authHelper: AuthHelper;
     authSetup: Page;
-
+    bookingPage : BookingPage;
+    bookingDetailPage : BookingDetailsPage;
 }
 
 export const test = base.extend<MyFixtures>({
@@ -58,6 +61,14 @@ export const test = base.extend<MyFixtures>({
             await expect(homePage.loginEmailUser).toBeVisible();
 
             await use(authenticatedPage);
+    },
+
+    bookingPage : async ({page}, use)=>{
+        await use(new BookingPage(page));
+    },   
+
+    bookingDetailPage : async({page}, use) =>{
+      await use (new BookingDetailsPage(page));
     }
 })
 export { expect };
