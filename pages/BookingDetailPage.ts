@@ -38,7 +38,7 @@ export class BookingDetailsPage {
         return refid;
     }
 
-    async clickOnCancelBtn() {
+    async clickOnCancelBookingBtn() {
         await this.cancelBookingBtn.click();
     }
 
@@ -54,9 +54,10 @@ export class BookingDetailsPage {
         // We construct a dynamic RegExp using the variable passed in
         const labelRegex = new RegExp(`^${labelName}$`, 'i');
 
-        const detail = await this.eventDetails.locator('div.flex', { hasText: labelRegex })
-            .locator('span')
-            .nth(1).textContent();
+        const row =  this.eventDetails.locator('div.flex').filter({has: this.page.locator('span').filter({hasText: labelRegex}).first()});
+        
+        const detail = await row.locator('span')
+                        .nth(1).textContent();
 
         if (!detail) throw new Error(`Event details were not found ${labelName}`);
         return detail.trim();
@@ -86,9 +87,11 @@ export class BookingDetailsPage {
         // We construct a dynamic RegExp using the variable passed in
         const labelRegex = new RegExp(`^${labelName}$`, 'i');
 
-        const details = await this.customerDetails.locator('div.flex', { hasText: labelRegex })
-            .locator('span')
-            .nth(1).textContent();
+        const row = this.customerDetails.locator('div.flex').filter({has: this.page.locator('span').filter({ hasText: labelRegex })});
+            
+        const details = await row.locator('span')
+                        .nth(1).textContent();
+
         if (!details) throw new Error(`Customer details were not found on ${labelName}`);
 
         return details.trim();
@@ -110,14 +113,14 @@ export class BookingDetailsPage {
         // We construct a dynamic RegExp using the variable passed in
         const labelRegex = new RegExp(`^${labelName}$`, 'i');
 
-        const paymentText = await this.paymentSummary.locator('div.flex', { hasText: labelRegex })
-            .locator('span')
-            .nth(1).textContent();
+        const row = this.paymentSummary.locator('div.flex').filter({has: this.page.locator('span').filter({ hasText: labelRegex })});
+            
+        const paymentText = await row.locator('span')
+                        .nth(1).textContent();
 
         if (!paymentText) throw new Error(`Payment summary were not found at ${labelName}`);
 
         return paymentText.trim();
-
     }
 
     async getTickets(): Promise<number> {
@@ -143,7 +146,7 @@ export class BookingDetailsPage {
     }
 
     async getTotalPaid(): Promise<number> {
-        const priceText = await this.getPaymentSummaryValue('Total Paid ');
+        const priceText = await this.getPaymentSummaryValue('Total Paid');
 
         if (!priceText) {
             throw Error("total price not appeared on the page");

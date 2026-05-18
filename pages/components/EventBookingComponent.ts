@@ -45,7 +45,7 @@ export class EventBookingComponent {
 
         //Ticket counter 
         this.addTicket = page.getByRole('button', { name: "+" });
-        this.reduceTicket = page.getByRole('button', { name: "-" });
+        this.reduceTicket = page.getByRole('button', { name: "−" });
         this.currentTicketCount = page.locator('#ticket-count');
 
         //Booking user details 
@@ -89,6 +89,13 @@ export class EventBookingComponent {
 
     async decreaseTicketCount() {
         await this.reduceTicket.click();
+    }
+
+    // This method to test max limit for ticket booking 
+    async setTicketCountTo(count : number ){
+        for (let i=1 ; i < count ; i++){
+            await this.increaseTicketCount(); 
+        }
     }
 
     async getCurrentTicketCount() :Promise <number>{
@@ -183,8 +190,10 @@ export class EventBookingComponent {
         await this.clickOnConfirmBooking();
     }
 
-    async getBookingRefId() {
-        return await this.refIdText.textContent();
+    async getBookingRefId() : Promise<string> {
+        const id = await this.refIdText.textContent();
+        if(!id) throw new Error("Refrence id can not be found the booking page");
+        return id;
     }
 
     async clickOnViewBooking (){

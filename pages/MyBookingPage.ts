@@ -1,6 +1,6 @@
 import { Locator, Page } from "@playwright/test";
 
-export class BookingPage {
+export class MyBookingPage {
 
     page : Page
     bookingTitle : Locator;
@@ -36,16 +36,16 @@ export class BookingPage {
         await this.browseEventBtn.click();
     }
 
-    getEventCard(eventName : string){
-        return this.bookingCard.filter({hasText:eventName});
+    getEventCard(refId : string ){
+        return this.bookingCard.filter({hasText:refId});
     }
 
-    async clickOnViewDetails(eventName : string){
-        await this.getEventCard(eventName).getByRole('button',{name:/View Details/i}).click();
+    async clickOnViewDetails(refId : string){
+        await this.getEventCard(refId).getByRole('button',{name:/View Details/i}).click();
     }
 
-    async clickOnCancelBooking(eventName : string){
-        await this.getEventCard(eventName).getByRole('button', {name:/Cancel Booking/i}).click();
+    async clickOnCancelBooking(refId : string){
+        await this.getEventCard(refId).getByRole('button', {name:/Cancel Booking/i}).click();
     }
 
     async confirmCancelBooking(){
@@ -56,36 +56,40 @@ export class BookingPage {
         await this.cancelDialog.getByRole('button', {name: /Cancel/i}).click(); 
     }
 
-    private async extractTextFromCard(eventName :string, i : number){
-        const text = await this.getEventCard(eventName).locator('span').nth(i).textContent();
+    private async extractTextFromCard(refId :string, i : number){
+        const text = await this.getEventCard(refId).locator('span').nth(i).textContent();
         
-        if (!text) throw new Error(`Event ${eventName} is not found on the page`);
+        if (!text) throw new Error(`Event with ${refId} is not found on the page`);
         return text.trim();        
     }
 
-    async getRefernceId(eventName : string) : Promise<string>{
-        const refId = await this.getEventCard(eventName).locator('div', {has: this.page.getByTestId('booking-id')}).locator('span').first().textContent();
-        if(!refId)throw new Error(`Refernce ID not found on the event ${eventName}`);
+    async getRefernceId(refID : string) : Promise<string>{
+        const refId = await this.getEventCard(refID).locator('div', {has: this.page.getByTestId('booking-id')}).locator('span').first().textContent();
+        if(!refId)throw new Error(`Refernce ID not found : ${refID}`);
         return refId;
     }
 
-    async getEventDate(eventName :string) : Promise <string>{
-       const date = await this.extractTextFromCard(eventName,1);
+    async getEventDate(refId :string) : Promise <string>{
+       const date = await this.extractTextFromCard(refId,1);
        return date;
     }
 
-    async getBookedEventTicketCount(eventName : string): Promise <string>{
-      const ticket = await this.extractTextFromCard(eventName, 2);
+    async getBookedEventTicketCount(refId : string): Promise <string>{
+      const ticket = await this.extractTextFromCard(refId, 4);
       return ticket;
     }
 
-    async getBookedEventVenue(eventName: string) : Promise <string>{
-        const venue =await this.extractTextFromCard(eventName,3)
-        return venue;
+    async getBookedEventCity(refId: string) : Promise <string>{
+        const city =await this.extractTextFromCard(refId,5);
+
+        const text = city.split(' ');
+
+        text.shift(); //remove first element
+        return text.join(' ');
     }
 
-    async getBookedEventDate(eventName : string): Promise <string>{
-        const date = await this.extractTextFromCard(eventName, 4);
+    async getBookedEventDate(refId : string): Promise <string>{
+        const date = await this.extractTextFromCard(refId, 3);
         return date;
     }
 
