@@ -21,12 +21,21 @@ type MyFixtures = {
     authSetup: Page;
     myBookingPage : MyBookingPage;
     bookingDetailPage : BookingDetailsPage;
+    loginViaUi : HomePage; 
 }
 
 export const test = base.extend<MyFixtures>({
 
     loginPage: async ({ page }, use) => {
         await use(new LoginPage(page));
+    },
+
+    loginViaUi : async({loginPage, homePage}, use)=>{
+        await loginPage.navigate();
+        await  loginPage.login(testData.validUser2.email, testData.validUser2.password);
+        await expect(homePage.loginEmailUser).toBeVisible();
+
+        await use(homePage);
     },
 
     registerPage : async({page}, use)=> {
