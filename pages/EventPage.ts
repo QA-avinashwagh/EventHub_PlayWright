@@ -11,6 +11,7 @@ export class EventPage {
     clearFilterBtn: Locator;
     noEventResult: Locator;
     eventCard: Locator;
+    loadingSkeleton : Locator;
 
     constructor(page: Page) {
         this.page = page;
@@ -19,11 +20,11 @@ export class EventPage {
         //Seach inputs and filters
         this.searchInp = page.getByPlaceholder("Search events, venues…");
         this.categoriesDropDown = page.getByRole('combobox').nth(0);
-        this.citiesDropDown = page.getByRole('combobox').nth(0);
+        this.citiesDropDown = page.getByRole('combobox').nth(1);
         this.clearFilterBtn = page.getByRole('button', { name: "Clear filters" });
         this.noEventResult = page.getByRole('heading', { name: "No events found" });
         this.eventCard = page.getByTestId('event-card');
-
+        this.loadingSkeleton = page.locator('.animate-pulse');
     }
 
     async goTo() {
@@ -38,6 +39,19 @@ export class EventPage {
             this.noEventResult.waitFor()
         ]);
     }
+
+    async filterCategory(category : string){
+        await this.categoriesDropDown.selectOption(category); 
+    }
+
+    async filterCity(city : string){
+        await this.citiesDropDown.selectOption(city);
+    }
+
+    async waitForResultToLoad(){
+        await this.loadingSkeleton.first().waitFor({state :'hidden'});
+    }
+
 
     async isEventVisible(eventName: string) {
         const isVisible = await this.eventCard.filter({ hasText: eventName }).isVisible();

@@ -20,8 +20,11 @@ export class EventFormComponent {
     imageUrl: Locator;
     addEventBtn: Locator;
     successMsg: Locator;
+    updateBtn : Locator; 
+    updateMsg : Locator;
     allEventsTitle: Locator;
     eventDialog: Locator;
+    dismissToastBtn : Locator;
 
     errorTitle: Locator;
     errorCity: Locator;
@@ -52,6 +55,9 @@ export class EventFormComponent {
         this.imageUrl = page.getByLabel('image URL (optional)');
         this.addEventBtn = page.getByRole("button", { name: "Add Event" });
         this.successMsg = page.getByText("Event created!");
+        this.updateBtn = page.getByTestId('add-event-btn');
+        this.updateMsg = page.getByText("Event updated!");
+        this.dismissToastBtn = page.getByRole('button', {name:'Dismiss'})
 
         //Error message on the field 
         this.errorTitle = page.getByText("Title is required");
@@ -73,14 +79,14 @@ export class EventFormComponent {
 
     async addEventDetails(eventData : EventData) {
 
-        await this.eventTitleInp.fill(eventData.title);
+        await this.addNewEventTitle(eventData.title)
         await this.eventDescriptionTextbox.fill(eventData.description);
-        await this.categoryDropdown.selectOption(eventData.category);
+        await this.updateCategory(eventData.category);
         await this.cityInp.fill(eventData.city);
-        await this.venueInp.fill(eventData.venue);
+        await this.addNewVenu(eventData.venue);
         await this.eventDateAndTimeSelect.fill(eventData.dateAndTime);
-        await this.priceInp.fill(eventData.price);
-        await this.seatsInp.fill(eventData.seats);
+        await this.addNewPrice(eventData.price);
+        await this.addNewSeats(eventData.seats);
         
         if(eventData.imageUrl){
         await this.imageUrl.fill(eventData.imageUrl);
@@ -90,6 +96,35 @@ export class EventFormComponent {
 
     async clickOnAddEvent() {
         await this.addEventBtn.click();
+    }
+
+    //Edit Event fields 
+    async addNewEventTitle(title : string){
+        await this.eventTitleInp.fill(title);
+    }
+
+    async addNewVenu(venue : string){
+        await this.venueInp.fill(venue);
+    }
+
+    async addNewPrice(price: string){
+        await this.priceInp.fill(price);
+    }
+
+    async addNewSeats(seat : string){
+        await this.seatsInp.fill(seat);
+    }
+
+    async updateCategory(category : string){
+      await this.categoryDropdown.selectOption(category); 
+    }
+
+    async clickOnUpdateEvent(){
+        await this.updateBtn.click();
+    }
+
+    async disMissToast(){
+        await this.dismissToastBtn.click(); 
     }
 
     getEventRow(eventName: string) {
@@ -105,11 +140,21 @@ export class EventFormComponent {
     async deleteEvent(eventName: string) {
         const row = this.getEventRow(eventName);
         await row.getByRole('button', { name: "Delete" }).click();
+    }
 
+    async clickOnConfirmDelete(){
         await this.eventDialog
             .getByRole('button', { name: "Delete event" })
             .click();
     }
+
+    async clickOnDismissDeleteModal(){
+        await this.eventDialog
+            .getByRole('button', { name: "Cancel" })
+            .click();
+    }
+
+
 
     getEventDeleteDialog() {
         const title = this.eventDialog.getByRole('heading', { name: "Delete this event?" });
