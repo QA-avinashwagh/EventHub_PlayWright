@@ -19,5 +19,9 @@ export class HomePage {
         this.myBookingLink = page.getByRole('button', {name:'My Bookings'});
     }
 
+    async goTo(){
+        await this.page.goto('/');
+    }
+
 
 }

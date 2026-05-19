@@ -69,14 +69,22 @@ export class MyBookingPage {
         return refId;
     }
 
+    async getEventTitle(refId : string) : Promise<string>{
+        const title = await this.getEventCard(refId).getByRole('heading').textContent();
+        if(!title) throw new Error(`Event title is not found with refernce id ${refId}`);
+        return title;
+    }
+
     async getEventDate(refId :string) : Promise <string>{
        const date = await this.extractTextFromCard(refId,1);
        return date;
     }
 
-    async getBookedEventTicketCount(refId : string): Promise <string>{
+    async getBookedEventTicketCount(refId : string): Promise <number>{
       const ticket = await this.extractTextFromCard(refId, 4);
-      return ticket;
+
+      const text = ticket.replace(/[^0-9]/g, '');
+       return parseInt(text);
     }
 
     async getBookedEventCity(refId: string) : Promise <string>{
