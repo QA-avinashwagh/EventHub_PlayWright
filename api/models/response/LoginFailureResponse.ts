@@ -1,4 +1,4 @@
-export interface LoginFailure {
+export interface LoginFailureResponse {
  
     success : false,
     error : string, 

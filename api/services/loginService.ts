@@ -1,6 +1,6 @@
 import { AuthClient } from "../clients/AuthClient";
-import { LoginSuccessResponse } from "../models/LoginSuccessResponse";
-import { LoginFailure } from "../models/LoginFailure";
+import { LoginSuccessResponse } from "../models/response/LoginSuccessResponse";
+import { LoginFailureResponse } from "../models/response/LoginFailureResponse";
 
 
 export class AuthService {
@@ -21,7 +21,7 @@ export class AuthService {
         console.log(response.status());
         console.log(response.url())
 
-        const data = await response.json() as LoginSuccessResponse | LoginFailure;
+        const data = await response.json() as LoginSuccessResponse | LoginFailureResponse;
 
         if (data.success) {
             return data;

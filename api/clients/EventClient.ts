@@ -1,5 +1,5 @@
 import { APIRequestContext, APIResponse } from "@playwright/test";
-import { CreateEventRequest } from "../models/CreateEventRequest";
+import { CreateEventRequest } from "../models/request/CreateEventRequest";
 import { API_BASE_URL } from "../../config/env";
 
 
@@ -25,6 +25,38 @@ export class EventClient{
             data :payload
         });
 
+    }
+
+    async getEvent(id: number) : Promise<APIResponse>{
+
+        return await this.request.get(`${API_URL}/`+id, {
+            headers:{
+                'Authorization' :`Bearer ${this.token}`
+            }, 
+
+        })
+    }
+
+    async updateEvent(id: number, payload : CreateEventRequest) : Promise<APIResponse>{
+
+        return await this.request.put(`${API_URL}/`+id, {
+            headers:{
+                'Authorization' :`Bearer ${this.token}`
+            }, 
+
+            data : payload
+        }) 
+
+    }
+
+    async deleteEvent(id: number) : Promise<APIResponse>{
+
+        return await this.request.delete(`${API_URL}/`+id, {
+            headers:{
+                'Authorization' :`Bearer ${this.token}`
+            }, 
+
+        })
     }
 
 }

@@ -1,4 +1,4 @@
-export interface CreateEventFailure {
+export interface EventValidationError {
 
     success: false,
     error: string,
