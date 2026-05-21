@@ -1,10 +1,13 @@
 import { EventClient } from "../clients/EventClient";
-import { EventValidationError } from "../models/response/EventValidationErrorResponse";
+import { EventValidationErrorResponse } from "../models/response/EventValidationErrorResponse";
 import { CreateEventRequest } from "../models/request/CreateEventRequest";
 import { CreateEventSuccessResponse } from "../models/response/CreateEventSuccessResponse";
 import { DeleteEventSuccessResponse } from "../models/response/DeleteEventSucessResponse";
 import { ApiErrorResponse } from "../models/response/ApiErrorResponse ";
 import { GetEventSuccess } from "../models/response/GetEventSuccessResponse";
+import { CreateEventApiResponse } from "../models/response/CreateEventApiResponse";
+import { GetEventApiResponse } from "../models/response/GetEventApiResponse";
+import { DeleteEventApiResponse } from "../models/response/DeleteEventApiResponse";
 
 export class EventService {
 
@@ -14,7 +17,7 @@ export class EventService {
         this.eventClient = eventClient
     }
 
-    async createEvent(eventData: CreateEventRequest) {
+    async createEvent(eventData: CreateEventRequest): Promise<CreateEventApiResponse> {
 
         const response = await this.eventClient.createEvent(eventData);
 
@@ -23,89 +26,96 @@ export class EventService {
         const status = response.status();
 
         if (status === 201) {
-
-            return await response.json() as CreateEventSuccessResponse;
+            return {
+                status,
+                body: await response.json() as CreateEventSuccessResponse
+            }
         }
+        else if (status === 400) {
+            return {
+                status,
+                body: await response.json() as EventValidationErrorResponse
+            }
+        } else if (status === 401 || status === 404 || status === 500) {
 
-        if (status === 400) {
-
-            return await response.json() as EventValidationError;
+            return {
+                status,
+                body: await response.json() as ApiErrorResponse
+            }
+        } else {
+            throw new Error(`Unexpected status code: ${status}`);
         }
-
-        if (status === 401 || status === 404 || status === 500) {
-            return await response.json() as ApiErrorResponse;
-        }
-
-        throw new Error(`Unexpected status code: ${status}`);
     }
 
-    async getEvent(id: number) {
+    async getEvent(id: number): Promise<GetEventApiResponse> {
 
         const response = await this.eventClient.getEvent(id);
 
         const status = response.status();
 
         if (status === 200) {
-            return await response.json() as GetEventSuccess;
+            return {
+                status,
+                body: await response.json() as GetEventSuccess
+            }
+        } else if (status === 401 || status === 404 || status === 500) {
+            return {
+                status,
+                body: await response.json() as ApiErrorResponse
+            }
+        } else {
+            throw new Error(`Unexpected status code: ${status}`);
         }
-        if (status === 401 || status === 404 || status === 500) {
-            return await response.json() as ApiErrorResponse;
-        }
-
-        throw new Error(`Unexpected status code: ${status}`);
-
     }
 
-    async updateEvent(id: number, eventData: CreateEventRequest) {
-
+    async updateEvent(id: number, eventData: CreateEventRequest): Promise<CreateEventApiResponse> {
 
         const response = await this.eventClient.updateEvent(id, eventData);
 
         console.log(response.status());
-
         const status = response.status();
 
-        if (status === 200) {
-
-            return await response.json() as CreateEventSuccessResponse;
+        if (status === 201) {
+            return {
+                status,
+                body: await response.json() as CreateEventSuccessResponse
+            }
         }
+        else if (status === 400) {
+            return {
+                status,
+                body: await response.json() as EventValidationErrorResponse
+            }
+        } else if (status === 401 || status === 404 || status === 500) {
 
-        if (status === 400) {
-
-            return await response.json() as EventValidationError;
+            return {
+                status,
+                body: await response.json() as ApiErrorResponse
+            }
+        } else {
+            throw new Error(`Unexpected status code: ${status}`);
         }
-
-        if (status === 401 || status === 404 || status === 500) {
-            return await response.json() as ApiErrorResponse;
-        }
-
-        throw new Error(`Unexpected status code: ${status}`);
-
     }
 
-    async deleteEvent(id: number) {
+    async deleteEvent(id: number): Promise<DeleteEventApiResponse> {
 
         const response = await this.eventClient.deleteEvent(id);
-
-        console.log(response.url());
-
-        const data = await response.json() as DeleteEventSuccessResponse | ApiErrorResponse
-
-        console.log(response.status());
-
         const status = response.status();
 
         if (status === 200) {
-
-            return await response.json() as DeleteEventSuccessResponse;
+            return {
+                status,
+                body: await response.json() as DeleteEventSuccessResponse
+            }
+        } else if (status === 404 || status === 500) {
+            return {
+                status,
+                body: await response.json() as ApiErrorResponse
+            }
+        } else {
+            throw new Error(`Unexpected status code: ${status}`);
         }
-        if (status === 404 || status === 500) {
-            return await response.json() as ApiErrorResponse;
-        }
 
-        throw new Error(`Unexpected status code: ${status}`);
     }
-
-
 
 }
