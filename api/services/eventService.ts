@@ -3,11 +3,12 @@ import { EventValidationErrorResponse } from "../models/response/EventValidation
 import { CreateEventRequest } from "../models/request/CreateEventRequest";
 import { CreateEventSuccessResponse } from "../models/response/CreateEventSuccessResponse";
 import { DeleteEventSuccessResponse } from "../models/response/DeleteEventSucessResponse";
-import { ApiErrorResponse } from "../models/response/ApiErrorResponse ";
+import { ApiErrorResponse } from "../models/response/ApiErrorResponse";
 import { GetEventSuccess } from "../models/response/GetEventSuccessResponse";
 import { CreateEventApiResponse } from "../models/response/CreateEventApiResponse";
 import { GetEventApiResponse } from "../models/response/GetEventApiResponse";
 import { DeleteEventApiResponse } from "../models/response/DeleteEventApiResponse";
+import { updateEventApiResponse } from "../models/response/updateEventApiResponse";
 
 export class EventService {
 
@@ -68,14 +69,14 @@ export class EventService {
         }
     }
 
-    async updateEvent(id: number, eventData: CreateEventRequest): Promise<CreateEventApiResponse> {
+    async updateEvent(id: number, eventData: CreateEventRequest): Promise<updateEventApiResponse> {
 
         const response = await this.eventClient.updateEvent(id, eventData);
 
         console.log(response.status());
         const status = response.status();
 
-        if (status === 201) {
+        if (status === 200) {
             return {
                 status,
                 body: await response.json() as CreateEventSuccessResponse

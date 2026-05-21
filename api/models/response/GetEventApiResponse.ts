@@ -1,5 +1,5 @@
 import { GetEventSuccess } from "./GetEventSuccessResponse";
-import { ApiErrorResponse } from "./ApiErrorResponse ";
+import { ApiErrorResponse } from "./ApiErrorResponse";
 
 export type GetEventApiResponse =
 
