@@ -2,7 +2,7 @@ import { test, expect } from "../../../fixtures/ApiFixture"
 import event from "../../../test_data/eventData.json"
 import { CreateEventRequest } from "../../../api/models/request/CreateEventRequest";
 
-
+ 
 test("@api-event should be able to create event", async ({ eventService }) => {
 
     const payload: CreateEventRequest = {
@@ -22,11 +22,13 @@ test("@api-event should be able to create event", async ({ eventService }) => {
         imageUrl: event.rockConcert.imageUrl
     };
 
-    const resEvent = await eventService.createEvent(payload);
+    const createResponse = await eventService.createEvent(payload);
 
-    expect(resEvent.success).toBeTruthy();
-    if (resEvent.success) {
-        expect(resEvent.data.title).toBe(event.rockConcert.title);
+    expect (createResponse.status).toBe(201);
+    if (createResponse.status == 201) {
+        expect(createResponse.body.success).toBeTruthy();
+        expect(createResponse.body.data.title).toBe(event.rockConcert.title);
+        
     }
 
 })
@@ -50,29 +52,30 @@ test("@api-event shold displayed error for the invalid field title", async ({ ev
         imageUrl: event.rockConcert.imageUrl
     };
 
-    const resEvent = await eventService.createEvent(payload);
+    const createResponse = await eventService.createEvent(payload);
+    expect (createResponse.status).toBe(400);
 
-    expect(resEvent.success).toBeFalsy();
+    if (createResponse.status === 400) {
 
-    if (!resEvent.success) {
+        expect(createResponse.body.success).toBeFalsy();
 
-        expect(resEvent.error).toBe("Validation failed");
-        expect(resEvent.details.at(0)?.message).toBe("Title is required");
+        expect(createResponse.body.error).toBe("Validation failed");
+        expect(createResponse.body.details[0].message).toBe("Title is required");
     }
-
-})
+});
 
 test("@api-event should get the event by id ", async ({ eventService }) => {
 
-    const response = await eventService.getEvent(2);
+    const getResponse = await eventService.getEvent(2);
 
-    expect(response.success).toBeTruthy();
+    expect(getResponse.status).toBe(200);
 
-    if (response.success) {
-        expect(response.data.title).toBe("Hollywood Monsoon Night — Los Angeles");
+    if (getResponse.status === 200) {
+        expect(getResponse.body.success).toBeTruthy();
+
+        expect(getResponse.body.data.title).toBe("Hollywood Monsoon Night — Los Angeles");
     }
 })
-
 
 test("@api-event should be able to update the event", async ({ eventService }) => {
 
@@ -93,25 +96,24 @@ test("@api-event should be able to update the event", async ({ eventService }) =
         imageUrl: event.rockConcert.imageUrl
     };
 
+    const updateResponse = await eventService.updateEvent(37851, payload);
 
-    const response = await eventService.updateEvent(37851, payload);
+    expect(updateResponse.status).toBe(200);
+    expect(updateResponse.body.success).toBeTruthy();
 
-    expect(response.success).toBeTruthy();
-
-    if (response.success) {
-        expect(response.data.title).toBe("Startup Connect 2026");
+    if (updateResponse.status === 200) {
+        expect(updateResponse.body.data.title).toBe("Startup Connect 2026");
     }
 }); 
 
-
-
 test("@api-event should be able to delete the event", async({eventService})=>{
 
-    const response = await eventService.deleteEvent(37849);
+    const deleteResponse = await eventService.deleteEvent(37849);
 
-    expect(response.success).toBeTruthy();
+    expect(deleteResponse.body.success).toBeTruthy();
+    expect(deleteResponse.status).toBe(200)
 
-    if (response.success) {
-        expect(response.message).toBe("Event deleted successfully");
+    if (deleteResponse.status == 200) {
+        expect(deleteResponse.body.message).toBe("Event deleted successfully");
     }
 });
