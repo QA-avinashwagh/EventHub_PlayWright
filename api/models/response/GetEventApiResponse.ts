@@ -9,7 +9,7 @@ export type GetEventApiResponse =
 
   }
   | {
-    status: 401 | 404 | 500;
+    status: 404 | 500;
     body: ApiErrorResponse;
   };
 

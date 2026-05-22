@@ -1,5 +1,7 @@
-import { test, expect } from "../../../fixtures/baseFixture";
+import { test, expect } from "../../../fixtures/ApiFixture";
 import eventData from "../../../test_data/eventData.json";
+import { cleanupEvent } from "../../../utils/CleanUpHelper";
+import { generateEventPayload } from "../../../utils/factories/eventFactory";
 
 test.describe('Event page ', () => {
 
@@ -35,7 +37,12 @@ test.describe('Event page ', () => {
     });
 
     test.describe('Event Creation', () => {
-        test("@event @regression should be able to create event with valid required data", async ({ authSetup, eventPage, eventFormComponent }) => {
+        test("@event @regression should be able to create event with valid required data", async ({ authSetup,eventService, eventPage, eventFormComponent }) => {
+
+            const payload = generateEventPayload()
+
+            let eventId : number|undefined;
+            try {
 
             await eventPage.goTo();
             await eventPage.clickOnAddNewEvent();
@@ -45,9 +52,23 @@ test.describe('Event page ', () => {
             await eventFormComponent.addEventDetails(eventData.iplFinals);
 
             await expect(eventFormComponent.successMsg).toBeVisible();
+             
+            const response = await eventService.getAllEvent({city:eventData.iplFinals.city, search:eventData.iplFinals.title});
+            console.log(response);    
+
+            if(response.status === 200){
+                const createdEvent = response.body.data.find(event => event.title === eventData.iplFinals.title)
+                eventId = createdEvent?.id;
+                console.log(`Inside block : ${eventId}`)
+            }
 
             await expect(eventFormComponent.allEventsTitle).toBeVisible();
             await expect(eventFormComponent.getEventRow(eventData.iplFinals.title)).toBeVisible();
+        
+            } finally {  
+                console.log(`befor clean up : ${eventId}`)               
+                 await cleanupEvent(eventService, eventId)
+            }
         });
 
         test("@event @regression should be able to display an error on required field", async ({ authSetup, eventPage, eventFormComponent }) => {

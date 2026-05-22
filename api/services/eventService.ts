@@ -9,6 +9,9 @@ import { CreateEventApiResponse } from "../models/response/CreateEventApiRespons
 import { GetEventApiResponse } from "../models/response/GetEventApiResponse";
 import { DeleteEventApiResponse } from "../models/response/DeleteEventApiResponse";
 import { updateEventApiResponse } from "../models/response/updateEventApiResponse";
+import { GetEventQuery } from "../models/request/GetEventQuery";
+import { GetAllEventsSuccessResponse } from "../models/response/GetAllEventSuccessResponse";
+import { GetAllEventApiResponse } from "../models/response/GetAllEventApiResponse";
 
 export class EventService {
 
@@ -59,7 +62,28 @@ export class EventService {
                 status,
                 body: await response.json() as GetEventSuccess
             }
-        } else if (status === 401 || status === 404 || status === 500) {
+        } else if (status === 404 || status === 500) {
+            return {
+                status,
+                body: await response.json() as ApiErrorResponse
+            }
+        } else {
+            throw new Error(`Unexpected status code: ${status}`);
+        }
+    }
+
+    async getAllEvent(query: GetEventQuery): Promise<GetAllEventApiResponse> {
+
+        const response = await this.eventClient.getAllEvent(query);
+
+        const status = response.status();
+
+        if (status === 200) {
+            return {
+                status,
+                body: await response.json() as GetAllEventsSuccessResponse
+            }
+        } else if (status === 500) {
             return {
                 status,
                 body: await response.json() as ApiErrorResponse
