@@ -104,7 +104,6 @@ test.describe('Event page ', () => {
 
         });
 
-
         test.describe("Edit Event", () => {
 
             test('@regression @event should be able to edit event created ', async ({ authSetup, eventPage, eventFormComponent }) => {
@@ -194,7 +193,6 @@ test.describe('Event page ', () => {
 
 
         })
-
 
 
     })
