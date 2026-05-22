@@ -13,7 +13,7 @@ test.describe('Event Booking', () => {
 
         });
 
-        test("@regression @booking should  booked event sucessfully", async ({ authSetup, eventPage, eventBookingComponent, myBookingPage }) => {
+        test("@regression @booking should booked event sucessfully", async ({ authSetup, eventPage, eventBookingComponent, myBookingPage }) => {
 
             await eventPage.goTo();
             await eventPage.clickOnBookTickets(eventData.defaulDiwali.title);

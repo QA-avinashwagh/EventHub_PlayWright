@@ -2,6 +2,7 @@ import { test, expect } from "../../../fixtures/ApiFixture"
 import event from "../../../test_data/eventData.json"
 import { CreateEventRequest } from "../../../api/models/request/CreateEventRequest";
 import { generateEventPayload } from "../../../utils/factories/eventFactory";
+import { cleanupEvent } from "../../../utils/CleanUpHelper";
 
 test.describe("Event API ", () => {
     test("@api-event should be able to create event", async ({ eventService }) => {
@@ -21,13 +22,7 @@ test.describe("Event API ", () => {
 
             }
         } finally {
-            try {
-                if (eventId) {
-                    await eventService.deleteEvent(eventId);
-                }
-            } catch (error) {
-                console.error(`Cleanup failed for event ${eventId}:`, error)
-            }
+                    await cleanupEvent(eventService, eventId);
         }
     })
 
@@ -88,13 +83,9 @@ test.describe("Event API ", () => {
             }
         }
         finally {
-            try {
-                await eventService.deleteEvent(eventId);
-            } catch (error) {
-                console.error(`Cleanup failed for event ${eventId}:`, error);
-            }
+            await cleanupEvent(eventService, eventId);
         }
-    })
+     });
 
     test("@api-event should be able to update the event", async ({ eventService }) => {
 
@@ -121,11 +112,7 @@ test.describe("Event API ", () => {
                 expect(updateResponse.body.data.title).toBe(updatePayload.title);
             }
         } finally {
-            try {
-                await eventService.deleteEvent(eventId);
-            } catch (error) {
-                console.error(`Cleanup failed for event ${eventId}:`, error);
-            }
+                    await cleanupEvent(eventService, eventId);
         }
     });
 

@@ -1,6 +1,6 @@
 import { APIRequestContext, Page } from "@playwright/test";
 import { AuthClient } from "../api/clients/AuthClient";
-import { AuthService } from "../api/services/loginService";
+import { AuthService } from "../api/services/AuthService";
 
 export class AuthHelper  {
 

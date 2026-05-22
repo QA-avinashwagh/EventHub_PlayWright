@@ -12,11 +12,11 @@ export function generateEventPayload():
 
         description: "Music festival event",
 
-        category: "Music",
+        category: "Concert",
 
         venue: "Madison Square Garden",
 
-        city: "New York",
+        city: "Mumbai",
 
         eventDate: "2026-12-10",
 
