@@ -85,7 +85,7 @@ test.describe("API+UI", () => {
         }
     })
 
-    test("should be able to delete the event created by APi", async ({ eventService, authSetup, eventPage, eventFormComponent }) => {
+    test("should be able to delete the event created by API", async ({ eventService, authSetup, eventPage, eventFormComponent }) => {
 
         const payload = generateEventPayload();
 

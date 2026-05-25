@@ -9,9 +9,24 @@ test.describe("Event API ", () => {
 
         const createPayload = generateEventPayload();
 
+        // Attach request payload
+        await test.info().attach("Create Event Payload",
+                {
+                    body : JSON.stringify(createPayload,null,2),
+                    contentType : "application/json"
+                }     
+        );
+
         let eventId: number | undefined;
         try {
             const createResponse = await eventService.createEvent(createPayload);
+
+            await test.info().attach("Create Event Response",
+                {
+                    body : JSON.stringify(createResponse.body,null,2),
+                    contentType : "application/json"
+                }      
+            );
 
             expect(createResponse.status).toBe(201);
 
@@ -45,8 +60,21 @@ test.describe("Event API ", () => {
             imageUrl: event.rockConcert.imageUrl
         };
 
+        await test.info().attach("Create Event Payload", 
+            {
+                body : JSON.stringify(payload, null,2),
+                contentType : "application/json"
+            }
+         );
+
         const createResponse = await eventService.createEvent(payload);
         expect(createResponse.status).toBe(400);
+
+        await test.info().attach("Create Event Response", {
+                    body: JSON.stringify(createResponse.body, null, 2),
+                    contentType: "application/json"
+         });
+
 
         if (createResponse.status === 400) {
 
@@ -61,9 +89,19 @@ test.describe("Event API ", () => {
 
         const createPayload = generateEventPayload();
 
+        await test.info().attach("Creat Event Payload", {
+            body: JSON.stringify(createPayload, null, 2), 
+            contentType:"application/json"
+        })
+
         const createResponse = await eventService.createEvent(createPayload);
 
         expect(createResponse.status).toBe(201);
+
+        await test.info().attach("Create Event Response", {
+            body:JSON.stringify(createResponse.body, null, 2), 
+            contentType : "application/json"
+        })
 
         if (createResponse.status !== 201) {
             throw new Error("Event creation failed");
@@ -73,6 +111,11 @@ test.describe("Event API ", () => {
 
         try {
             const getResponse = await eventService.getEvent(eventId);
+
+            await test.info().attach("Get Event Response", {
+            body:JSON.stringify(getResponse.body, null, 2), 
+            contentType : "application/json"
+        })
 
             expect(getResponse.status).toBe(200);
 
@@ -91,7 +134,17 @@ test.describe("Event API ", () => {
 
         const createPayload = generateEventPayload();
 
+        await test.info().attach("Creat Event Payload", {
+            body: JSON.stringify(createPayload, null, 2), 
+            contentType:"application/json"
+        })
+
         const createResponse = await eventService.createEvent(createPayload);
+
+        await test.info().attach("Create Event Response", {
+            body:JSON.stringify(createResponse.body, null, 2), 
+            contentType : "application/json"
+        })
 
         expect(createResponse.status).toBe(201);
 
@@ -102,8 +155,18 @@ test.describe("Event API ", () => {
         const eventId = createResponse.body.data.id;
         const updatePayload = generateEventPayload();
 
+        await test.info().attach("Update Event Payload",{
+            body:JSON.stringify(updatePayload, null, 2), 
+            contentType : "application/json"
+        })
+
         try {
             const updateResponse = await eventService.updateEvent(eventId, updatePayload);
+
+            await test.info().attach("Update Event Response", {
+            body:JSON.stringify(updateResponse.body, null, 2), 
+            contentType : "application/json"
+        })
 
             expect(updateResponse.status).toBe(200);
             expect(updateResponse.body.success).toBeTruthy();
@@ -120,7 +183,17 @@ test.describe("Event API ", () => {
 
         const createPayload = generateEventPayload();
 
+        await test.info().attach("Creat Event Payload", {
+            body: JSON.stringify(createPayload, null, 2), 
+            contentType:"application/json"
+        })
+
         const createResponse = await eventService.createEvent(createPayload);
+
+        await test.info().attach("Create Event Response", {
+            body:JSON.stringify(createResponse.body, null, 2), 
+            contentType : "application/json"
+        })
 
         expect(createResponse.status).toBe(201);
 
@@ -130,6 +203,11 @@ test.describe("Event API ", () => {
 
         const eventId = createResponse.body.data.id;
         const deleteResponse = await eventService.deleteEvent(eventId);
+
+        await test.info().attach("Delete Event Response", {
+            body:JSON.stringify(deleteResponse.body, null, 2), 
+            contentType : "application/json"
+        })
 
         expect(deleteResponse.body.success).toBeTruthy();
         expect(deleteResponse.status).toBe(200)

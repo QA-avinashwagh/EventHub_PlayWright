@@ -1,8 +1,7 @@
 import {expect, test} from "@playwright/test";
 import { AuthClient } from "../../../api/clients/AuthClient";
-import { AuthService } from "../../../api/services/loginService";
+import { AuthService } from "../../../api/services/AuthService";
 import testData from "../../../test_data/loginUser.json"
-
 
 test("@api-auth Should log in successfully with valid credentials", async({request})=>{
 
@@ -10,6 +9,11 @@ test("@api-auth Should log in successfully with valid credentials", async({reque
     const authService = new AuthService(authClient);
 
     const response = await authService.login(testData.validUser1.email, testData.validUser1.password); 
+
+    test.info().attach("Login Response", {
+                body: JSON.stringify(response, null, 2),
+                contentType : "application/json"
+    })
 
      expect(response.success).toBeTruthy();
      expect(response.token).toBeDefined();
