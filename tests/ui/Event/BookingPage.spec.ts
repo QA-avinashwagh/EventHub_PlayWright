@@ -31,7 +31,7 @@ test.describe('Event Booking', () => {
         test("@regression @booking should display validation errors for empty booking details", async ({ authSetup, eventPage, eventBookingComponent }) => {
 
             await eventPage.goTo();
-            await eventPage.clickOnBookTickets("Hollywood Monsoon Night — Los Angeles");
+            await eventPage.clickOnBookTickets(eventData.defaultMonsoon.title);
 
             await eventBookingComponent.clickOnConfirmBooking();
 
