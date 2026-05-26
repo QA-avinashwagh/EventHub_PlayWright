@@ -1,6 +1,6 @@
 import { test, expect } from "../../../fixtures/ApiFixture"
 import event from "../../../test_data/eventData.json"
-import { CreateEventRequest } from "../../../api/models/request/CreateEventRequest";
+import { CreateEventRequest } from "../../../api/models/Event/request/CreateEventRequest";
 import { generateEventPayload } from "../../../utils/factories/eventFactory";
 import { cleanupEvent } from "../../../utils/CleanUpHelper";
 
