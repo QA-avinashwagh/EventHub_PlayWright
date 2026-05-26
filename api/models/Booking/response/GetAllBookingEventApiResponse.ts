@@ -1,4 +1,4 @@
-import { ApiErrorResponse } from "./ApiErrorResponse";
+import { ApiErrorResponse } from "../../Common/ApiErrorResponse";
 import { GetAllBookingEvent } from "./GetAllBookingEvent";
 
 export type GetAllBookingEventApiResponse =

@@ -1,6 +1,6 @@
 import { CreateEventSuccessResponse } from "./CreateEventSuccessResponse";
 import { EventValidationErrorResponse } from "./EventValidationErrorResponse";
-import { ApiErrorResponse } from "./ApiErrorResponse";
+import { ApiErrorResponse } from "../../Common/ApiErrorResponse";
 
 export type updateEventApiResponse =
 

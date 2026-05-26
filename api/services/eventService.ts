@@ -1,17 +1,17 @@
 import { EventClient } from "../clients/EventClient";
-import { EventValidationErrorResponse } from "../models/response/EventValidationErrorResponse";
-import { CreateEventRequest } from "../models/request/CreateEventRequest";
-import { CreateEventSuccessResponse } from "../models/response/CreateEventSuccessResponse";
-import { DeleteEventSuccessResponse } from "../models/response/DeleteEventSucessResponse";
-import { ApiErrorResponse } from "../models/response/ApiErrorResponse";
-import { GetEventSuccess } from "../models/response/GetEventSuccessResponse";
-import { CreateEventApiResponse } from "../models/response/CreateEventApiResponse";
-import { GetEventApiResponse } from "../models/response/GetEventApiResponse";
-import { DeleteEventApiResponse } from "../models/response/DeleteEventApiResponse";
-import { updateEventApiResponse } from "../models/response/updateEventApiResponse";
-import { GetEventQuery } from "../models/request/GetEventQuery";
-import { GetAllEventsSuccessResponse } from "../models/response/GetAllEventSuccessResponse";
-import { GetAllEventApiResponse } from "../models/response/GetAllEventApiResponse";
+import { EventValidationErrorResponse } from "../models/Event/response/EventValidationErrorResponse";
+import { CreateEventRequest } from "../models/Event/request/CreateEventRequest";
+import { CreateEventSuccessResponse } from "../models/Event/response/CreateEventSuccessResponse";
+import { DeleteEventSuccessResponse } from "../models/Booking/response/DeleteEventSucessResponse";
+import { ApiErrorResponse } from "../models/Common/ApiErrorResponse";
+import { GetEventSuccess } from "../models/Event/response/GetEventSuccessResponse";
+import { CreateEventApiResponse } from "../models/Event/response/CreateEventApiResponse";
+import { GetEventApiResponse } from "../models/Event/response/GetEventApiResponse";
+import { DeleteEventApiResponse } from "../models/Event/response/DeleteEventApiResponse";
+import { updateEventApiResponse } from "../models/Event/response/updateEventApiResponse";
+import { GetEventQuery } from "../models/Event/request/GetEventQuery";
+import { GetAllEventsSuccessResponse } from "../models/Event/response/GetAllEventSuccessResponse";
+import { GetAllEventApiResponse } from "../models/Event/response/GetAllEventApiResponse";
 
 export class EventService {
 
@@ -24,9 +24,6 @@ export class EventService {
     async createEvent(eventData: CreateEventRequest): Promise<CreateEventApiResponse> {
 
         const response = await this.eventClient.createEvent(eventData);
-
-        console.log(response.status());
-
         const status = response.status();
 
         if (status === 201) {
@@ -54,7 +51,6 @@ export class EventService {
     async getEvent(id: number): Promise<GetEventApiResponse> {
 
         const response = await this.eventClient.getEvent(id);
-
         const status = response.status();
 
         if (status === 200) {
@@ -75,7 +71,6 @@ export class EventService {
     async getAllEvent(query: GetEventQuery): Promise<GetAllEventApiResponse> {
 
         const response = await this.eventClient.getAllEvent(query);
-
         const status = response.status();
 
         if (status === 200) {
@@ -96,8 +91,6 @@ export class EventService {
     async updateEvent(id: number, eventData: CreateEventRequest): Promise<updateEventApiResponse> {
 
         const response = await this.eventClient.updateEvent(id, eventData);
-
-        console.log(response.status());
         const status = response.status();
 
         if (status === 200) {

@@ -1,4 +1,4 @@
-import { ApiErrorResponse } from "./ApiErrorResponse";
+import { ApiErrorResponse } from "../../Common/ApiErrorResponse";
 import { BookingValidationErrorRsponse } from "./BookingValidationErrorResponse";
 import { CreateBookingResponse } from "./CreateBookingResponse";
 

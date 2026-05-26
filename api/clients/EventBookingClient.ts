@@ -1,65 +1,63 @@
 import { APIRequestContext, APIResponse } from "@playwright/test";
-import { GetAllEventBookingQuery } from "../models/request/GetAllEventBookingQuery";
+import { GetAllEventBookingQuery } from "../models/Booking/request/GetAllEventBookingQuery";
 import { API_BASE_URL } from "../../config/env";
-import { CreateBookingRequest } from "../models/request/CreateBookingRequest";
-import { BookingEventRefQuery } from "../models/request/BookingEventRefQuery";
-import { DeleteBookingReq } from "../models/request/DeleteBookingReq";
+import { CreateBookingRequest } from "../models/Event/request/CreateBookingRequest";
+import { BookingEventRefQuery } from "../models/Booking/request/BookingEventRefQuery";
 
-const API_URL = `${API_BASE_URL}/api/events`;
+const API_URL = `${API_BASE_URL}/api/bookings`;
 
 export class BookingClient {
 
-    private request : APIRequestContext;
-    private token : string;
+    private request: APIRequestContext;
+    private token: string;
 
-    constructor(request : APIRequestContext, token :string){
+    constructor(request: APIRequestContext, token: string) {
         this.request = request;
         this.token = token;
     }
 
-    async getAllBookingsByEventId(getAllEventBookingQuery : GetAllEventBookingQuery){
+    async getAllBookings(getAllEventBookingQuery: GetAllEventBookingQuery) :Promise<APIResponse>{
 
         return await this.request.get(API_URL, {
-            params : {
+            params: {
                 ...getAllEventBookingQuery
             },
-            headers :{
-                'Authorization' : `Bearer ${this.token}`
+            headers: {
+                'Authorization': `Bearer ${this.token}`
             }
         })
     }
 
-    async createBookingByEventId(payload : CreateBookingRequest) : Promise<APIResponse>{
+    async createBooking(payload: CreateBookingRequest): Promise<APIResponse> {
 
         return await this.request.post(API_URL, {
-            headers:{
-                'Authorization' : `Bearar ${this.token}`,
-                'Content-Type' : 'application/json' 
-            }, 
-            data :payload
+            headers: {
+                'Authorization': `Bearer ${this.token}`,
+                'Content-Type': 'application/json'
+            },
+            data: payload
         });
     }
 
-    async getBookingByRefId(bookingRefQuery :BookingEventRefQuery): Promise<APIResponse>{
+    async getBookingByRefId(bookingRefQuery: BookingEventRefQuery): Promise<APIResponse> {
 
         return await this.request.get(API_URL, {
             params: {
                 ...bookingRefQuery
-            }, 
-            headers:{
-                'Authorization' : 'application/json'
-            }
+            },
+            headers: {
+                'Authorization': `Bearer ${this.token}`,
+                'Content-Type': 'application/json'
+            },
         })
     }
 
-    async deleteBookingById(payload : DeleteBookingReq): Promise<APIResponse>{
+    async deleteBooking(id: number): Promise<APIResponse> {
 
-        return await this.request.delete(API_URL, {
-            headers:{
-                'Authorization' : `Bearar ${this.token}`,
-                'Content-Type' : 'application/json' 
-            }, 
-            data :payload
+        return await this.request.delete(`${API_URL}/` + id, {
+            headers: {
+                'Authorization': `Bearer ${this.token}`,
+            }
         })
     }
 

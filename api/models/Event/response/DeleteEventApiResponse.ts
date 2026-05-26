@@ -1,5 +1,5 @@
-import { ApiErrorResponse } from "./ApiErrorResponse";
-import { DeleteEventSuccessResponse } from "./DeleteEventSucessResponse";
+import { ApiErrorResponse } from "../../Common/ApiErrorResponse";
+import { DeleteEventSuccessResponse } from "../../Booking/response/DeleteEventSucessResponse";
 
 export type DeleteEventApiResponse =
 

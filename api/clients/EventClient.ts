@@ -1,7 +1,7 @@
 import { APIRequestContext, APIResponse } from "@playwright/test";
-import { CreateEventRequest } from "../models/request/CreateEventRequest";
+import { CreateEventRequest } from "../models/Event/request/CreateEventRequest";
 import { API_BASE_URL } from "../../config/env";
-import { GetEventQuery } from "../models/request/GetEventQuery";
+import { GetEventQuery } from "../models/Event/request/GetEventQuery";
 
 
 const API_URL = `${API_BASE_URL}/api/events`;
