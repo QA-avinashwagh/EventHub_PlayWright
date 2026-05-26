@@ -2,13 +2,16 @@ import { test as base, expect } from "../fixtures/baseFixture";
 import { AuthClient } from "../api/clients/AuthClient";
 import { AuthService } from "../api/services/AuthService";
 import user from "../test_data/loginUser.json";
-import { EventService } from "../api/services/eventService";
+import { EventService } from "../api/services/EventService";
 import { EventClient } from "../api/clients/EventClient";
+import { EventBookingService } from "../api/services/EventBookingService";
+import { BookingClient } from "../api/clients/EventBookingClient";
 
 type Apifixture = {
 
     authToken: string;
     eventService: EventService;
+    bookingService : EventBookingService
 }
 
 export const test = base.extend<Apifixture>({
@@ -31,6 +34,14 @@ export const test = base.extend<Apifixture>({
 
         await use(eventService);
 
+    },
+
+    bookingService : async({request, authToken}, use)=>{
+
+        const bookingClient = new BookingClient(request, authToken);
+        const bookingService = new EventBookingService(bookingClient);
+
+        await use(bookingService);
     }
 
 })

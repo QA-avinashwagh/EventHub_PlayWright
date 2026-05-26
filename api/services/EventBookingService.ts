@@ -1,6 +1,5 @@
 import { BookingClient } from "../clients/EventBookingClient";
-import { BookingEventRefQuery } from "../models/Booking/request/BookingEventRefQuery";
-import { CreateBookingRequest } from "../models/Event/request/CreateBookingRequest";
+import { CreateBookingRequest } from "../models/Booking/request/CreateBookingRequest";
 import { GetAllEventBookingQuery } from "../models/Booking/request/GetAllEventBookingQuery";
 import { ApiErrorResponse } from "../models/Common/ApiErrorResponse";
 import { BookingValidationErrorRsponse } from "../models/Booking/response/BookingValidationErrorResponse";
@@ -66,10 +65,9 @@ export class EventBookingService {
         }
     }
 
+    async getBookingByRefId(refId: string): Promise<GetBookingByRefIdApiResponse> {
 
-    async getBookingByRefId(refQuery: BookingEventRefQuery): Promise<GetBookingByRefIdApiResponse> {
-
-        const response = await this.bookingClient.getBookingByRefId(refQuery);
+        const response = await this.bookingClient.getBookingByRefId(refId);
         const status = response.status();
 
         if (status === 200) {

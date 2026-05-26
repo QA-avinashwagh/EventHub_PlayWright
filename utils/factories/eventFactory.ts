@@ -1,4 +1,4 @@
-import { CreateEventRequest } from "../../api/models/request/CreateEventRequest";
+import { CreateEventRequest } from "../../api/models/Event/request/CreateEventRequest";
 
 export function generateEventPayload():
 

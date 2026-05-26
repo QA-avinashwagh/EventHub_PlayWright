@@ -1,11 +1,9 @@
 import { APIRequestContext, APIResponse } from "@playwright/test";
 import { GetAllEventBookingQuery } from "../models/Booking/request/GetAllEventBookingQuery";
 import { API_BASE_URL } from "../../config/env";
-import { CreateBookingRequest } from "../models/Event/request/CreateBookingRequest";
-import { BookingEventRefQuery } from "../models/Booking/request/BookingEventRefQuery";
+import { CreateBookingRequest } from "../models/Booking/request/CreateBookingRequest";
 
 const API_URL = `${API_BASE_URL}/api/bookings`;
-
 export class BookingClient {
 
     private request: APIRequestContext;
@@ -16,7 +14,7 @@ export class BookingClient {
         this.token = token;
     }
 
-    async getAllBookings(getAllEventBookingQuery: GetAllEventBookingQuery) :Promise<APIResponse>{
+    async getAllBookings(getAllEventBookingQuery: GetAllEventBookingQuery): Promise<APIResponse> {
 
         return await this.request.get(API_URL, {
             params: {
@@ -39,12 +37,9 @@ export class BookingClient {
         });
     }
 
-    async getBookingByRefId(bookingRefQuery: BookingEventRefQuery): Promise<APIResponse> {
+    async getBookingByRefId(refId: string): Promise<APIResponse> {
 
-        return await this.request.get(API_URL, {
-            params: {
-                ...bookingRefQuery
-            },
+        return await this.request.get(`API_URL/ref/` + refId, {
             headers: {
                 'Authorization': `Bearer ${this.token}`,
                 'Content-Type': 'application/json'
