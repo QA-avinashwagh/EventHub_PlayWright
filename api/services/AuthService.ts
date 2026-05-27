@@ -17,9 +17,6 @@ export class AuthService {
             password
         });
 
-        console.log(response.status());
-        console.log(response.url())
-
         const data = await response.json() as LoginSuccessResponse | LoginFailureResponse;
 
         if (data.success) {

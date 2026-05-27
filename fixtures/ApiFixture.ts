@@ -6,12 +6,17 @@ import { EventService } from "../api/services/EventService";
 import { EventClient } from "../api/clients/EventClient";
 import { EventBookingService } from "../api/services/EventBookingService";
 import { BookingClient } from "../api/clients/EventBookingClient";
+import { Event } from "../models/Event";
+import { CreateEventByApi } from "../utils/CreateEventHelperApi";
+import { cleanupEvent } from "../utils/CleanUpHelper";
 
 type Apifixture = {
 
     authToken: string;
     eventService: EventService;
-    bookingService : EventBookingService
+    bookingService: EventBookingService;
+    eventResource: Event;
+    unauthorizedBookingService: EventBookingService;
 }
 
 export const test = base.extend<Apifixture>({
@@ -29,16 +34,42 @@ export const test = base.extend<Apifixture>({
     eventService: async ({ request, authToken }, use) => {
 
         const eventClient = new EventClient(request, authToken);
-
         const eventService = new EventService(eventClient);
 
         await use(eventService);
 
     },
 
-    bookingService : async({request, authToken}, use)=>{
+    bookingService: async ({ request, authToken }, use) => {
 
         const bookingClient = new BookingClient(request, authToken);
+        const bookingService = new EventBookingService(bookingClient);
+
+        await use(bookingService);
+    },
+
+    eventResource: async ({ eventService }, use) => {
+
+        const { eventResponse } = await CreateEventByApi(eventService);
+
+        if (eventResponse.status !== 201) {
+            throw new Error("Unable to create event")
+        }
+        const response = eventResponse.body.data;
+
+        //Setup Complete 
+        await use(response);
+
+        //CleanUp phase 
+        await cleanupEvent(eventService, response.id);
+
+    },
+
+    unauthorizedBookingService: async ({ request }, use) => {
+
+        const invalidToken = "invalid-token";
+
+        const bookingClient = new BookingClient(request, invalidToken);
         const bookingService = new EventBookingService(bookingClient);
 
         await use(bookingService);
