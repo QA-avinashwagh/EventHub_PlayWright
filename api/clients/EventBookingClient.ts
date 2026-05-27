@@ -39,7 +39,7 @@ export class BookingClient {
 
     async getBookingByRefId(refId: string): Promise<APIResponse> {
 
-        return await this.request.get(`API_URL/ref/` + refId, {
+        return await this.request.get(`${API_URL}/ref/` + refId, {
             headers: {
                 'Authorization': `Bearer ${this.token}`,
                 'Content-Type': 'application/json'
