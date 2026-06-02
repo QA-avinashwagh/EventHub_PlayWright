@@ -10,6 +10,7 @@ export class MyBookingPage {
     clearAllBookingBtn : Locator;
     bookingCard : Locator;
     cancelDialog : Locator; 
+    cancelToastMsg : Locator;
 
 
     constructor(page : Page){
@@ -22,6 +23,7 @@ export class MyBookingPage {
         this.clearAllBookingBtn = page.getByRole('button', {name: "Clear all bookings"}); 
         this.bookingCard = page.getByTestId('booking-card');
         this.cancelDialog = page.getByRole('dialog', {name: "Cancel this booking?"});
+        this.cancelToastMsg = page.getByText('Booking cancelled successfully')
     }
 
     async goTo(){
