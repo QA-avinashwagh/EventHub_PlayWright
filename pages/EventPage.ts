@@ -12,6 +12,8 @@ export class EventPage {
     noEventResult: Locator;
     eventCard: Locator;
     loadingSkeleton : Locator;
+    loadingIcon : Locator;
+    soldoutText : Locator; 
 
     constructor(page: Page) {
         this.page = page;
@@ -25,6 +27,8 @@ export class EventPage {
         this.noEventResult = page.getByRole('heading', { name: "No events found" });
         this.eventCard = page.getByTestId('event-card');
         this.loadingSkeleton = page.locator('.animate-pulse');
+        this.loadingIcon = page.getByRole('status', { name: 'Loading' })
+        this.soldoutText = page.getByText('Sold Out'); 
     }
 
     async goTo() {
@@ -81,6 +85,11 @@ export class EventPage {
     async clickOnBookTickets(eventName: string) {
         const event = this.getEventCard(eventName);
         await event.getByRole('link', { name: "Book Now" }).click();
+    }
+
+    getSoldOutButton(eventName: string): Locator{
+        const event = this.getEventCard(eventName);
+        return event.getByRole('link', { name: "Sold Out" });
     }
 
     async clickOnAddNewEvent() {

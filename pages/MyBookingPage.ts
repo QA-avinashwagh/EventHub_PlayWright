@@ -7,6 +7,11 @@ export class MyBookingPage {
     noBookingsTitle : Locator;
     noBookingMsg : Locator; 
     browseEventBtn : Locator;
+    
+    loadingBooking : Locator;
+    failToConnectMsg : Locator;
+    retryButton : Locator;
+
     clearAllBookingBtn : Locator;
     bookingCard : Locator;
     cancelDialog : Locator; 
@@ -17,9 +22,11 @@ export class MyBookingPage {
         this.page = page;
         this.bookingTitle = page.getByRole('heading', {name: "My Bookings"});
         this.noBookingsTitle = page.getByRole('heading', {name: "No bookings yet"});
-        this.noBookingMsg = page.locator('div', {has:page.getByRole('heading', {name: "No bookings yet"})}).locator('p');
+        this.noBookingMsg = page.locator('p', {hasText: "You haven't booked any events yet. Browse upcoming events and grab your tickets!"});
         this.browseEventBtn = page.getByRole('button',{name : "Browse Events"});
-
+        this.loadingBooking = page.getByRole('heading', {name:"Couldn't load bookings"})
+        this.failToConnectMsg = page.locator('p', {hasText: "Failed to connect to the server. Please try again."});
+        this.retryButton = page.getByRole('button', {name:'Retry'}); 
         this.clearAllBookingBtn = page.getByRole('button', {name: "Clear all bookings"}); 
         this.bookingCard = page.getByTestId('booking-card');
         this.cancelDialog = page.getByRole('dialog', {name: "Cancel this booking?"});

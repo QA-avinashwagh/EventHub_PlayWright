@@ -189,6 +189,13 @@ export class EventBookingComponent {
 
         await this.clickOnConfirmBooking();
     }
+    
+    async enterBookingDetails(fullName: string, email: string, phoneNum: string) {
+
+        await this.fullNameInp.fill(fullName);
+        await this.emailInp.fill(email);
+        await this.phoneNumInp.fill(phoneNum);
+    }
 
     async getBookingRefId() : Promise<string> {
         const id = await this.refIdText.textContent();
