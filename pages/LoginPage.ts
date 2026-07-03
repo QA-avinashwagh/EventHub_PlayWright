@@ -30,7 +30,7 @@ export class LoginPage{
 
     async login(email : string , password : string){
         await this.inpEmail.fill(email);
-        await this.inpPassword.fill (password);
+        await this.inpPassword.fill(password);
         await  this.signInBtn.click()
         
     }
