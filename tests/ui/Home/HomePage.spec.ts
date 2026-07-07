@@ -1,4 +1,4 @@
-import {test, expect} from "@playwright/test";
+import {test} from "@playwright/test";
 import { AuthHelper } from "../../../utils/authHelper";
 import data from "../../../test_data/loginUser.json"
 import { HomePage } from "../../../pages/HomePage";
@@ -14,9 +14,8 @@ test("@homepage @regression verify featured events present on home page", async(
             data.validUser1.password
      )
 
-    await expect(homePage.loginEmailUser).toBeVisible();
-    await expect(homePage.featuredEventTitle).toBeVisible()
-
-
+     await homePage.isLogedInUseEmailDisplayed(); 
+     await homePage.isfeatureEventTitleDisplayed();
+     
 
 })

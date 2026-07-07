@@ -144,7 +144,7 @@ export class EventBookingComponent {
     async getBookingEventSeats(): Promise<number> {
         const seatsText = await this.extractTextFromDetails(this.bookingTicketAvailability, "Seats");
         const splittext = seatsText?.split("/");
-        const availableSeat = splittext?.at(0);
+        const availableSeat = splittext?.[0];
         if (!availableSeat) throw new Error("could not spilt the available seat");
         const seats = availableSeat.replace(/[^0-9.]/g, '');
         const seat = parseInt(seats);

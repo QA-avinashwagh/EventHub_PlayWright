@@ -111,7 +111,7 @@ test("should be able to cancel the booking created by API ", async ({authSetup, 
 
     await myBookingPage.clickOnCancelBooking(refId);
     await myBookingPage.confirmCancelBooking();
-    await expect (myBookingPage.cancelToastMsg).toBeVisible();
+    await myBookingPage.isCancelToastMsgDisplayed();
 
     const card = myBookingPage.getEventCard(refId);
     await expect(card).not.toBeVisible();

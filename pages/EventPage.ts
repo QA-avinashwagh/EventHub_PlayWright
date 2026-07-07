@@ -1,19 +1,20 @@
 import { Locator, Page } from "@playwright/test";
+import { EventCardComponent } from "./components/EventCardComponent";
 export class EventPage {
 
-    page: Page;
-    addNewEventBtn: Locator;
+    private readonly page: Page;
+    private readonly addNewEventBtn: Locator;
 
     // search input and filters 
-    searchInp: Locator;
-    categoriesDropDown: Locator;
-    citiesDropDown: Locator;
-    clearFilterBtn: Locator;
-    noEventResult: Locator;
-    eventCard: Locator;
-    loadingSkeleton : Locator;
-    loadingIcon : Locator;
-    soldoutText : Locator; 
+    private readonly searchInp: Locator;
+    private readonly categoriesDropDown: Locator;
+    private readonly citiesDropDown: Locator;
+    private readonly clearFilterBtn: Locator;
+    private readonly noEventResult: Locator;
+    private readonly eventCard: Locator;
+    private readonly loadingSkeleton: Locator;
+    private readonly loadingIcon: Locator;
+    private readonly soldoutText: Locator;
 
     constructor(page: Page) {
         this.page = page;
@@ -28,14 +29,30 @@ export class EventPage {
         this.eventCard = page.getByTestId('event-card');
         this.loadingSkeleton = page.locator('.animate-pulse');
         this.loadingIcon = page.getByRole('status', { name: 'Loading' })
-        this.soldoutText = page.getByText('Sold Out'); 
+        this.soldoutText = page.getByText('Sold Out');
     }
 
-    async goTo() {
+    async goTo(): Promise<void> {
         await this.page.goto('/events');
     }
 
-    async searchEvent(eventName: string) {
+    get noEventMessage(): Locator {
+        return this.noEventResult;
+    }
+
+    get addNewButton(): Locator {
+        return this.addNewEventBtn
+    }
+
+    async waitForSkeletonToAppear(): Promise<void> {
+        await this.loadingSkeleton.first().waitFor({ state: 'visible' });
+    }
+
+    async waitForResultToLoad(): Promise<void> {
+        await this.loadingSkeleton.first().waitFor({ state: 'hidden', timeout: 5000 });
+    }
+
+    async searchEvent(eventName: string): Promise<void> {
         await this.searchInp.pressSequentially(eventName);
 
         await Promise.race([
@@ -44,56 +61,29 @@ export class EventPage {
         ]);
     }
 
-    async filterCategory(category : string){
-        await this.categoriesDropDown.selectOption(category); 
+    async filterCategory(category: string): Promise<void> {
+        await this.categoriesDropDown.selectOption(category);
     }
 
-    async filterCity(city : string){
+    async filterCity(city: string): Promise<void> {
         await this.citiesDropDown.selectOption(city);
     }
 
-    async waitForResultToLoad(){
-        await this.loadingSkeleton.first().waitFor({state :'hidden'});
+    async clearFilter() : Promise<void>{
+        await this.clearFilterBtn.click();
     }
 
-
-    async isEventVisible(eventName: string) {
-        const isVisible = await this.eventCard.filter({ hasText: eventName }).isVisible();
-        return isVisible;
+    findEvent(eventName: string): EventCardComponent {
+        const card = this.eventCard.filter({ hasText: eventName });
+         return new EventCardComponent(card, eventName);
     }
 
-    getEventCard(eventName: string) {
-        return this.eventCard.filter({ hasText: eventName });
-    }
-
-    async getEventPrice(eventName: string) {
-        const event = this.getEventCard(eventName);
-        const priceText = await event.getByText(/^\$/).textContent();
-        if (!priceText) throw new Error(`Could not find price for event: ${eventName}`);
-        const price = priceText.replace(/[^0-9.]/g, '');
-        return parseFloat(price);
-    }
-
-    async getAvailableSeats(eventName: string) {
-        const event = this.getEventCard(eventName);
-        const availableSeatText = await event.getByText(/seats available/i).textContent();
-        if (!availableSeatText) throw new Error(`Could not find seats for event: ${eventName}`);
-        const availableSeats = availableSeatText.replace(/[^0-9.]/g, '');
-        return parseFloat(availableSeats);
-    }
-
-    async clickOnBookTickets(eventName: string) {
-        const event = this.getEventCard(eventName);
-        await event.getByRole('link', { name: "Book Now" }).click();
-    }
-
-    getSoldOutButton(eventName: string): Locator{
-        const event = this.getEventCard(eventName);
-        return event.getByRole('link', { name: "Sold Out" });
-    }
-
-    async clickOnAddNewEvent() {
+    async clickOnAddNewEvent(): Promise<void> {
         await this.addNewEventBtn.click();
+    }
+
+    get soldOutText(): Locator {
+        return (this.soldoutText);
     }
 
 }

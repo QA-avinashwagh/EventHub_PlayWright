@@ -22,8 +22,8 @@ test('@Api-Mocking should display empty state illustration when list is empty', 
     });
 
     await eventPage.goTo();
-    await expect(eventPage.noEventResult).toBeVisible();
-    await expect(eventPage.addNewEventBtn).toBeVisible();
+    await eventPage.isNoEventMsgDispalyed();
+    await eventPage.isAddNewButtonVisible();
 });
 
 
@@ -52,12 +52,12 @@ test('@Api-Mocking should display skeleton during a slow API response', async ({
     });
 
     await eventPage.goTo();
-    await expect(eventPage.loadingSkeleton.first()).toBeVisible();
+    await eventPage.waitForSkeletonToAppear();
 
-    await expect(eventPage.loadingSkeleton.first()).toBeHidden({ timeout: 5000 });
+    await eventPage.waitForResultToLoad();
 
-    await expect(eventPage.noEventResult).toBeVisible();
-    await expect(eventPage.addNewEventBtn).toBeVisible();
+    await eventPage.isNoEventMsgDispalyed();
+    await eventPage.isAddNewButtonVisible();
 });
 
 
@@ -76,8 +76,11 @@ test('@API-Mocking should display an error when API gets failed', async ({ authS
     });
 
     await eventPage.goTo();
-    await expect(eventPage.loadingSkeleton.first()).toBeVisible();
-    await expect(eventPage.addNewEventBtn).toBeVisible();
+
+    await eventPage.waitForSkeletonToAppear();
+
+    await eventPage.waitForResultToLoad();
+    await eventPage.isAddNewButtonVisible();
 
 })
 
@@ -118,7 +121,7 @@ test('@API-Mocking should display events mocked by API', async ({ authSetup, pag
 
     await eventPage.goTo();
     await expect(eventPage.getEventCard("Mock Summit 2026")).toBeVisible();
-    await expect(eventPage.addNewEventBtn).toBeVisible();
+    await eventPage.isAddNewButtonVisible();
 
 })
 
@@ -130,7 +133,10 @@ test('@API-Mocking should be able to handle network interruption', async ({ auth
     });
 
     await eventPage.goTo();
-    await expect(eventPage.loadingSkeleton.first()).toBeVisible();
-    await expect(eventPage.addNewEventBtn).toBeVisible();
+
+    await eventPage.waitForSkeletonToAppear();
+
+    await eventPage.waitForResultToLoad();
+    await eventPage.isAddNewButtonVisible();
 
 })

@@ -1,3 +1,4 @@
+import { validateHeaderName } from "node:http";
 import { test, expect } from "../../../fixtures/ApiFixture";
 import user from "../../../test_data/bookingUserDetails.json"
 
@@ -22,10 +23,9 @@ test("@API-Mocking should display empty state illustration when list is empty", 
     });
 
     await myBookingPage.goTo();
-    await expect(myBookingPage.noBookingsTitle).toBeVisible();
-    await expect(myBookingPage.noBookingMsg).toBeVisible();
-
-});
+    await myBookingPage.isNoBookingTitleDisplayed();
+    await myBookingPage.isNoBookingMsgDisplayed();
+})
 
 test('@API-Mocking should display an error when API gets failed', async ({ authSetup, page, myBookingPage }) => {
 
@@ -42,9 +42,9 @@ test('@API-Mocking should display an error when API gets failed', async ({ authS
     });
 
     await myBookingPage.goTo();
-    await expect(myBookingPage.loadingBooking).toBeVisible();
-    await expect(myBookingPage.failToConnectMsg).toBeVisible();
-    await expect(myBookingPage.retryButton).toBeVisible();
+    await myBookingPage.isFailedToLoadHeadingVisible();
+    await myBookingPage.isFailToConnectDisplayed();
+    await myBookingPage.isRetryButtonVisbile();
 })
 
 test('@API-Mocking should be able to book mock event displaye in the event ', async ({ authSetup, page, eventPage, eventBookingComponent, myBookingPage }) => {
@@ -56,6 +56,7 @@ test('@API-Mocking should be able to book mock event displaye in the event ', as
         request.url()
     );
 });
+validateHeaderName
 
     await page.route('**/api/events*', async (route) => {
 
@@ -231,7 +232,7 @@ test('@API-Mocking should be able to mock seat count and verify the behavoiur', 
 
     await eventPage.goTo();
     await expect(eventPage.getEventCard("Mock Summit 2026")).toBeVisible();
-    await expect(eventPage.soldoutText.first()).toBeVisible();
+    await eventPage.isSoldOutTextVisible(); 
     await expect(eventPage.getSoldOutButton("Mock Summit 2026")).toBeVisible();
 
-})  
+});

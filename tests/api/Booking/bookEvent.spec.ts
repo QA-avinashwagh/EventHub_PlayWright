@@ -127,7 +127,7 @@
         if (bookingResponse.status === 400) {
             expect(bookingResponse.body.success).toBeFalsy();
             expect(bookingResponse.body.error).toBe("Validation failed");
-            expect(bookingResponse.body.details.at(0)?.message).toBe("Quantity must be an integer between 1 and 10")
+            expect(bookingResponse.body.details[0].message).toBe("Quantity must be an integer between 1 and 10")
         }
     });
 
@@ -157,7 +157,7 @@
         if (bookingResponse.status === 400) {
             expect(bookingResponse.body.success).toBeFalsy();
             expect(bookingResponse.body.error).toBe("Validation failed");
-            expect(bookingResponse.body.details.at(0)?.message).toBe("Quantity must be an integer between 1 and 10")
+            expect(bookingResponse.body.details[0].message).toBe("Quantity must be an integer between 1 and 10")
         }
     });
 

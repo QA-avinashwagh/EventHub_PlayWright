@@ -10,14 +10,15 @@ test.describe('Event page ', () => {
 
             await eventPage.goTo();
             await eventPage.searchEvent(eventData.defaultSummit.title);
-            await expect(eventPage.getEventCard(eventData.defaultSummit.title)).toBeVisible();
+            const event = eventPage.findEvent(eventData.defaultSummit.title);
+            await expect(event.root).toBeVisible();
         });
 
         test("@event @regression should display no results for invalid search", async ({ authSetup, eventPage }) => {
 
             await eventPage.goTo();
             await eventPage.searchEvent("Tech123NonExists");
-            await expect(eventPage.noEventResult).toBeVisible();
+            await expect (eventPage.noEventMessage).toBeVisible();
 
         });
 
@@ -30,8 +31,9 @@ test.describe('Event page ', () => {
             await eventPage.filterCity(eventData.defaultSummit.city);
 
             await eventPage.waitForResultToLoad();
-            await expect(eventPage.getEventCard(eventData.defaultSummit.title)).toHaveCount(1);
-            await expect(eventPage.getEventCard(eventData.defaultSummit.title)).toBeVisible();
+            const event = eventPage.findEvent(eventData.defaultSummit.title)
+            await expect(event.root).toHaveCount(1);
+            await expect(event.root).toBeVisible();
         })
 
     });
@@ -98,8 +100,9 @@ test.describe('Event page ', () => {
                 eventId = await getEventIdByTitle(eventService, eventData.diwaliCarnival.city, eventData.diwaliCarnival.title);
 
                 await eventPage.goTo();
-                const eventPrice = await eventPage.getEventPrice(eventData.diwaliCarnival.title);
-                const availableEventSeats = await eventPage.getAvailableSeats(eventData.diwaliCarnival.title)
+                const diwaliEvent = eventPage.findEvent(eventData.diwaliCarnival.title)
+                const eventPrice = await diwaliEvent.getPrice();
+                const availableEventSeats = await diwaliEvent.getAvailableSeats()
 
                 const actualPrice = parseFloat(eventData.diwaliCarnival.price);
                 const actualSeats = parseInt(eventData.diwaliCarnival.seats)
@@ -107,7 +110,7 @@ test.describe('Event page ', () => {
                 expect(eventPrice).toBe(actualPrice);
                 expect(availableEventSeats).toBe(actualSeats);
 
-                await eventPage.clickOnBookTickets(eventData.diwaliCarnival.title);
+                await diwaliEvent.book();
 
                 const bookingEventPrice = await eventBookingComponent.getBookingEventPricePerTicket();
                 const bookingEventSeats = await eventBookingComponent.getBookingEventSeats()
