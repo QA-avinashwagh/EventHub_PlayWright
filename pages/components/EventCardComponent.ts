@@ -37,5 +37,8 @@ export class EventCardComponent {
         return this.card.getByRole('link', { name: "Sold Out" });
     }
 
+    get soldOutText(): Locator {
+        return this.card.getByText('Sold Out');
+    }
 
 }

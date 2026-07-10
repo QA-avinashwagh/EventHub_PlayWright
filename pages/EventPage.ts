@@ -14,7 +14,6 @@ export class EventPage {
     private readonly eventCard: Locator;
     private readonly loadingSkeleton: Locator;
     private readonly loadingIcon: Locator;
-    private readonly soldoutText: Locator;
 
     constructor(page: Page) {
         this.page = page;
@@ -29,7 +28,6 @@ export class EventPage {
         this.eventCard = page.getByTestId('event-card');
         this.loadingSkeleton = page.locator('.animate-pulse');
         this.loadingIcon = page.getByRole('status', { name: 'Loading' })
-        this.soldoutText = page.getByText('Sold Out');
     }
 
     async goTo(): Promise<void> {
@@ -80,10 +78,6 @@ export class EventPage {
 
     async clickOnAddNewEvent(): Promise<void> {
         await this.addNewEventBtn.click();
-    }
-
-    get soldOutText(): Locator {
-        return (this.soldoutText);
     }
 
 }

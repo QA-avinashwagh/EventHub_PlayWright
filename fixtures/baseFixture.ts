@@ -2,13 +2,13 @@ import { test as base, Page, expect } from "@playwright/test"
 import { LoginPage } from "../pages/LoginPage"
 import { HomePage } from "../pages/HomePage"
 import { EventPage } from "../pages/EventPage"
-import { EventBookingComponent } from "../pages/components/EventBookingComponent"
+import { EventDetailsPage } from "../pages/EventDetailsPage"
 import { CreateEventPage } from "../pages/CreateEventPage";
 import { AuthHelper } from "../utils/authHelper"
 import testData from "../test_data/loginUser.json"
 import { RegisterPage } from "../pages/RegisterPage"
 import { MyBookingPage } from "../pages/MyBookingPage"
-import { BookingDetailsPage } from "../pages/BookingDetailPage"
+import { BookingDetailsPage } from "../pages/BookingDetailsPage"
 
 type MyFixtures = {
     loginPage: LoginPage;
@@ -16,7 +16,7 @@ type MyFixtures = {
     homePage: HomePage;
     eventPage: EventPage;
     createEventPage: CreateEventPage;
-    eventBookingComponent: EventBookingComponent;
+    eventDetailPage: EventDetailsPage;
     authHelper: AuthHelper;
     authSetup: Page;
     myBookingPage : MyBookingPage;
@@ -54,8 +54,8 @@ export const test = base.extend<MyFixtures>({
         await use(new CreateEventPage(page))
     },
 
-    eventBookingComponent: async ({ page }, use) => {
-        await use(new EventBookingComponent(page))
+    eventDetailPage: async ({ page }, use) => {
+        await use(new EventDetailsPage(page))
     },
 
     authHelper: async ({ }, use) => {

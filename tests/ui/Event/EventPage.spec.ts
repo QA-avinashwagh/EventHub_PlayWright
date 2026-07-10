@@ -18,7 +18,7 @@ test.describe('Event page ', () => {
 
             await eventPage.goTo();
             await eventPage.searchEvent("Tech123NonExists");
-            await expect (eventPage.noEventMessage).toBeVisible();
+            await expect(eventPage.noEventMessage).toBeVisible();
 
         });
 
@@ -57,7 +57,7 @@ test.describe('Event page ', () => {
                 eventId = await getEventIdByTitle(eventService, eventData.iplFinals.city, eventData.iplFinals.title)
 
                 await expect(createEventPage.allEventTitles).toBeVisible();
-                const event =  createEventPage.getEventRow(eventData.iplFinals.title); 
+                const event = createEventPage.getEventRow(eventData.iplFinals.title);
                 expect(event.root).toBeVisible();
                 expect(event.getTitle()).toBe(eventData.iplFinals.title);
 
@@ -82,10 +82,10 @@ test.describe('Event page ', () => {
             await expect(createEventPage.errorOnSeats).toBeVisible();
         });
 
-        test("@event @regression should display correct event details on booking page", async ({ authSetup, eventService, eventPage, createEventPage, eventBookingComponent }) => {
+        test("@event @regression should display correct event details on booking page", async ({ authSetup, eventService, eventPage, createEventPage, bookingDetailPage }) => {
 
             let eventId: number | undefined;
-            try {   
+            try {
                 await eventPage.goTo();
                 await eventPage.clickOnAddNewEvent();
 
@@ -98,7 +98,7 @@ test.describe('Event page ', () => {
                 await expect(createEventPage.allEventTitles).toBeVisible();
                 const event = createEventPage.getEventRow(eventData.diwaliCarnival.title);
                 await expect(event.root).toBeVisible();
-                expect (event.getTitle()).toBe(eventData.diwaliCarnival.title)
+                expect(event.getTitle()).toBe(eventData.diwaliCarnival.title)
 
                 //Get event id using helper  
                 eventId = await getEventIdByTitle(eventService, eventData.diwaliCarnival.city, eventData.diwaliCarnival.title);
@@ -116,10 +116,10 @@ test.describe('Event page ', () => {
 
                 await diwaliEvent.book();
 
-                const bookingEventPrice = await eventBookingComponent.getBookingEventPricePerTicket();
-                const bookingEventSeats = await eventBookingComponent.getBookingEventSeats()
-                const bookingEventCity = await eventBookingComponent.getBookingEventCity();
-                const bookingEventVenue = await eventBookingComponent.getBookingEventVenue();
+                const bookingEventPrice = await bookingDetailPage.getPricePerTicket();
+                const bookingEventSeats = await bookingDetailPage.getTickets();
+                const bookingEventCity = await bookingDetailPage.getEventCity();
+                const bookingEventVenue = await bookingDetailPage.getEventVenue();
 
                 expect(bookingEventPrice).toBe(actualPrice);
                 expect(bookingEventSeats).toBe(actualSeats);
@@ -168,7 +168,7 @@ test.describe('Event page ', () => {
                     await expect(createEventPage.updateMessage).toBeVisible();
 
                     const updateEvent = createEventPage.getEventRow("Pro Leauge kabdi");
-                    await expect(updateEvent.root).toBeVisible(); 
+                    await expect(updateEvent.root).toBeVisible();
                     await expect(updateEvent.getTitle()).toBe("Pro Leauge kabdi");
                 } finally {
                     console.log(`befor clean up : ${eventId}`)
@@ -185,8 +185,8 @@ test.describe('Event page ', () => {
                     await eventPage.clickOnAddNewEvent();
 
                     await createEventPage.createEvent(eventData.diwaliCarnival);
-                    const event = createEventPage.getEventRow(eventData.diwaliCarnival.title);    
-                    
+                    const event = createEventPage.getEventRow(eventData.diwaliCarnival.title);
+
                     await expect(event.root).toBeVisible();
 
                     //Get event id using helper  
@@ -226,10 +226,10 @@ test.describe('Event page ', () => {
                 await expect(createEventPage.allEventTitles).toBeVisible();
                 expect(event.getTitle()).toBe(eventData.rockConcert.title);
 
-                await event.delete(); 
+                await event.delete();
                 const dialog = createEventPage.getDeleteDialog();
-                expect (dialog.root).toBeVisible();
-                await dialog.delete(); 
+                expect(dialog.root).toBeVisible();
+                await dialog.delete();
                 await expect(event.root).toHaveCount(0);
             });
 
@@ -241,7 +241,7 @@ test.describe('Event page ', () => {
                     await eventPage.clickOnAddNewEvent();
 
                     await createEventPage.createEvent(eventData.diwaliCarnival);
-                    const event =  createEventPage.getEventRow(eventData.diwaliCarnival.title);
+                    const event = createEventPage.getEventRow(eventData.diwaliCarnival.title);
                     await expect(event.root).toBeVisible();
 
                     //Get event id using helper  

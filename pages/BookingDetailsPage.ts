@@ -6,12 +6,12 @@ export class BookingDetailsPage {
     private readonly cancelBookingBtn: Locator;
     private readonly cancelDialog: Locator;
     private readonly eventDetails: Locator;
-    customerDetails: Locator;
-    paymentSummary: Locator;
-    checkEligibilityRefundBtn: Locator;
-    refundSpinner: Locator;
-    refundResult: Locator;
-    referanceId : Locator; 
+    private readonly customerDetails: Locator;
+    private readonly paymentSummary: Locator;
+    private readonly checkEligibilityRefundBtn: Locator;
+    private readonly refundSpinner: Locator;
+    private readonly refundResult: Locator;
+    private readonly referanceId : Locator; 
 
     constructor(page: Page) {
         this.page = page;
