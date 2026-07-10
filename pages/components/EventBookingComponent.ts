@@ -2,34 +2,34 @@ import { Page, Locator } from "@playwright/test";
 
 export class EventBookingComponent {
 
-    page: Page;
+    private readonly page: Page;
 
     //Book Tickets 
-    bookingTicketPrice: Locator;
-    bookingTicketDate: Locator;
-    bookingTicketTime: Locator;
-    bookingTicketVenue: Locator;
-    bookingTicketCity: Locator;
-    bookingTicketAvailability: Locator;
+    private readonly bookingTicketPrice: Locator;
+    private readonly bookingTicketDate: Locator;
+    private readonly bookingTicketTime: Locator;
+    private readonly bookingTicketVenue: Locator;
+    private readonly bookingTicketCity: Locator;
+    private readonly bookingTicketAvailability: Locator;
 
-    addTicket: Locator;
-    reduceTicket: Locator;
-    currentTicketCount: Locator;
+    private readonly addTicket: Locator;
+    private readonly reduceTicket: Locator;
+    private readonly currentTicketCount: Locator;
 
-    fullNameInp: Locator;
-    emailInp: Locator;
-    phoneNumInp: Locator;
+    private readonly fullNameInp: Locator;
+    private readonly emailInp: Locator;
+    private readonly phoneNumInp: Locator;
 
-    errorFullname: Locator;
-    errorEmail: Locator;
-    errorPhoneNum: Locator;
+    private readonly errorFullname: Locator;
+    private readonly errorEmail: Locator;
+    private readonly errorPhoneNum: Locator;
 
-    confirmBookingBtn: Locator;
-    totalPriceTxt: Locator
+    private readonly confirmBookingBtn: Locator;
+    private readonly totalPriceTxt: Locator
 
-    confirmBookingText: Locator;
-    viewMyBookingBtn : Locator;
-    refIdText: Locator;
+    private readonly confirmBookingText: Locator;
+    private readonly viewMyBookingBtn: Locator;
+    private readonly refIdText: Locator;
 
     constructor(page: Page) {
 
@@ -57,27 +57,27 @@ export class EventBookingComponent {
         // This finds the parent container that has the "Full Name" label,
         // then finds the red error paragraph inside it.
         this.errorFullname = page.locator('div')
-            .filter({has: page.getByLabel('Full Name')})
+            .filter({ has: page.getByLabel('Full Name') })
             .locator('p.text-red-600')
-            .filter({hasText :/name/i});
+            .filter({ hasText: /name/i });
         this.errorEmail = page.locator('div')
             .filter({ has: page.getByLabel('Email') })
             .locator('p.text-red-600')
-            .filter({hasText:/email/i});
+            .filter({ hasText: /email/i });
         this.errorPhoneNum = page.locator('div')
-            .filter({ has: page.getByLabel('Phone Number')})
+            .filter({ has: page.getByLabel('Phone Number') })
             .locator('p.text-red-600')
-            .filter({hasText:/phone/i});
+            .filter({ hasText: /phone/i });
 
         //total price 
-        this.totalPriceTxt = page.locator('div', {has: page.getByText('Total')});
+        this.totalPriceTxt = page.locator('div', { has: page.getByText('Total') });
         this.confirmBookingBtn = page.getByRole('button', { name: "Confirm Booking" });
 
         //confirm booking 
         this.confirmBookingText = page.getByRole('heading', { name: "Booking Confirmed! 🎉" });
 
-        this.viewMyBookingBtn = page.getByRole('link', {name: "View My Bookings"});
-        
+        this.viewMyBookingBtn = page.getByRole('link', { name: "View My Bookings" });
+
         //refrence id 
         this.refIdText = page.locator('.booking-ref');
 
@@ -92,15 +92,15 @@ export class EventBookingComponent {
     }
 
     // This method to test max limit for ticket booking 
-    async setTicketCountTo(count : number ){
-        for (let i=1 ; i < count ; i++){
-            await this.increaseTicketCount(); 
+    async setTicketCountTo(count: number) {
+        for (let i = 1; i < count; i++) {
+            await this.increaseTicketCount();
         }
     }
 
-    async getCurrentTicketCount() :Promise <number>{
+    async getCurrentTicketCount(): Promise<number> {
         const text = await this.currentTicketCount.textContent();
-        return parseInt(text ?? '0' , 10)
+        return parseInt(text ?? '0', 10)
     }
 
     private async extractTextFromDetails(locator: Locator, fieldName: string): Promise<string> {
@@ -148,10 +148,10 @@ export class EventBookingComponent {
         if (!availableSeat) throw new Error("could not spilt the available seat");
         const seats = availableSeat.replace(/[^0-9.]/g, '');
         const seat = parseInt(seats);
-        if(isNaN(seat)){
+        if (isNaN(seat)) {
             throw new Error("Seat is not able to parse");
         }
-        return seat; 
+        return seat;
     }
 
     async getPricePerTicket(): Promise<number> {
@@ -189,7 +189,7 @@ export class EventBookingComponent {
 
         await this.clickOnConfirmBooking();
     }
-    
+
     async enterBookingDetails(fullName: string, email: string, phoneNum: string) {
 
         await this.fullNameInp.fill(fullName);
@@ -197,13 +197,13 @@ export class EventBookingComponent {
         await this.phoneNumInp.fill(phoneNum);
     }
 
-    async getBookingRefId() : Promise<string> {
+    async getBookingRefId(): Promise<string> {
         const id = await this.refIdText.textContent();
-        if(!id) throw new Error("Refrence id can not be found the booking page");
+        if (!id) throw new Error("Refrence id can not be found the booking page");
         return id;
     }
 
-    async clickOnViewBooking (){
+    async clickOnViewBooking() {
         await this.viewMyBookingBtn.click();
     }
 

@@ -2,10 +2,10 @@ import { Locator, Page } from "@playwright/test";
 
 export class BookingDetailsPage {
 
-    page: Page;
-    cancelBookingBtn: Locator;
-    cancelDialog: Locator;
-    eventDetails: Locator;
+    private readonly page: Page;
+    private readonly cancelBookingBtn: Locator;
+    private readonly cancelDialog: Locator;
+    private readonly eventDetails: Locator;
     customerDetails: Locator;
     paymentSummary: Locator;
     checkEligibilityRefundBtn: Locator;

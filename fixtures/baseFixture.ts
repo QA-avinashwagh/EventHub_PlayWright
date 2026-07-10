@@ -3,7 +3,7 @@ import { LoginPage } from "../pages/LoginPage"
 import { HomePage } from "../pages/HomePage"
 import { EventPage } from "../pages/EventPage"
 import { EventBookingComponent } from "../pages/components/EventBookingComponent"
-import { EventFormComponent } from "../pages/components/EventFormComponent";
+import { CreateEventPage } from "../pages/CreateEventPage";
 import { AuthHelper } from "../utils/authHelper"
 import testData from "../test_data/loginUser.json"
 import { RegisterPage } from "../pages/RegisterPage"
@@ -15,7 +15,7 @@ type MyFixtures = {
     registerPage : RegisterPage;
     homePage: HomePage;
     eventPage: EventPage;
-    eventFormComponent: EventFormComponent;
+    createEventPage: CreateEventPage;
     eventBookingComponent: EventBookingComponent;
     authHelper: AuthHelper;
     authSetup: Page;
@@ -33,7 +33,7 @@ export const test = base.extend<MyFixtures>({
     loginViaUi : async({loginPage, homePage}, use)=>{
         await loginPage.navigate();
         await  loginPage.login(testData.validUser2.email, testData.validUser2.password);
-        await expect(homePage.loginEmailUser).toBeVisible();
+        await expect(homePage.loggedInUserEmail).toBeVisible();
 
         await use(homePage);
     },
@@ -50,8 +50,8 @@ export const test = base.extend<MyFixtures>({
         await use(new EventPage(page))
     },
 
-    eventFormComponent: async ({ page }, use) => {
-        await use(new EventFormComponent(page))
+    createEventPage: async ({ page }, use) => {
+        await use(new CreateEventPage(page))
     },
 
     eventBookingComponent: async ({ page }, use) => {
@@ -67,7 +67,7 @@ export const test = base.extend<MyFixtures>({
         const authenticatedPage = await authHelper.loginViaAPI(request, page,
             testData.validUser1.email,
             testData.validUser1.password);
-            await expect(homePage.loginEmailUser).toBeVisible();
+            await expect(homePage.loggedInUserEmail).toBeVisible();
 
             await use(authenticatedPage);
     },

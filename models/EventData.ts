@@ -1,5 +1,5 @@
 export interface EventData {
-    
+
    title: string;
    description: string;
    category: string;
