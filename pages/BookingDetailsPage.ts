@@ -1,9 +1,12 @@
 import { Locator, Page } from "@playwright/test";
+import { BookingCancelDialogComponent } from "./components/BookingCancelDialogComponent";
 
 export class BookingDetailsPage {
 
     private readonly page: Page;
     private readonly cancelBookingBtn: Locator;
+    private readonly cancelToastMsg: Locator;
+
     private readonly cancelDialog: Locator;
     private readonly eventDetails: Locator;
     private readonly customerDetails: Locator;
@@ -11,12 +14,16 @@ export class BookingDetailsPage {
     private readonly checkEligibilityRefundBtn: Locator;
     private readonly refundSpinner: Locator;
     private readonly refundResult: Locator;
-    private readonly referanceId : Locator; 
+    private readonly referenceId: Locator;
 
     constructor(page: Page) {
         this.page = page;
-        this.cancelBookingBtn = page.getByRole('button', { name: 'Cancel Booking' });
+
         this.cancelDialog = page.getByRole('dialog', { name: "Cancel this booking?" });
+        this.cancelBookingBtn = page.getByRole('button', { name: 'Cancel Booking' });
+
+        this.cancelToastMsg = page.getByText('Booking cancelled successfully')
+
         this.eventDetails = page.locator('div.bg-white')
             .filter({ has: page.getByRole('heading', { name: /Event Details/i }) });
         this.customerDetails = page.locator('div.bg-white')
@@ -28,95 +35,96 @@ export class BookingDetailsPage {
         this.checkEligibilityRefundBtn = page.getByTestId('check-refund-btn');
         this.refundSpinner = page.getByTestId('refund-spinner');
         this.refundResult = page.getByTestId('refund-result');
-        this.referanceId = page.locator('div', {has:page.getByText(/confirmed/i)}).locator('span');
+        this.referenceId = page.locator('div', { has: page.getByText(/confirmed/i) }).locator('span');
     }
 
 
-    async getRefID(): Promise<string>{
-        const refid = await this.referanceId.first().textContent();
-        if(!refid) throw new Error("Refernce id does not found booking detail page"); 
+    async getRefID(): Promise<string> {
+        const refid = await this.referenceId.first().textContent();
+        if (!refid) throw new Error("Refernce id does not found booking detail page");
         return refid;
     }
 
-    async clickOnCancelBookingBtn() {
+    async cancelBooking(): Promise<void> {
         await this.cancelBookingBtn.click();
     }
 
-    async confirmCancelBooking() {
-        await this.cancelDialog.getByRole('button', { name: /Yes, cancel it/i }).click();
+    getCancelDialog(): BookingCancelDialogComponent {
+        return new BookingCancelDialogComponent(this.cancelDialog);
     }
 
-    async dismissCancelBooking() {
-        await this.cancelDialog.getByRole('button', { name: /Cancel/i }).click();
+    get sucessCancelToast() : Locator{
+        return this.cancelToastMsg
     }
 
-    private async getEventDetailsValue(labelName: string): Promise<string> {
+
+    private async getEventDetails(labelName: string): Promise<string> {
         // We construct a dynamic RegExp using the variable passed in
         const labelRegex = new RegExp(`^${labelName}$`, 'i');
 
-        const row =  this.eventDetails.locator('div.flex').filter({has: this.page.locator('span').filter({hasText: labelRegex}).first()});
-        
+        const row = this.eventDetails.locator('div.flex').filter({ has: this.page.locator('span').filter({ hasText: labelRegex }).first() });
+
         const detail = await row.locator('span')
-                        .nth(1).textContent();
+            .nth(1).textContent();
 
         if (!detail) throw new Error(`Event details were not found ${labelName}`);
         return detail.trim();
     }
 
     async getEventTitle(): Promise<string> {
-        return await this.getEventDetailsValue('Event');
+        return await this.getEventDetails('Event');
     }
 
-    async getEventCategory(): Promise<string> {
-        return await this.getEventDetailsValue('Category');
+    getEventCategory(): Promise<string> {
+        return this.getEventDetails('Category');
     }
 
-    async getEventDate(): Promise<string> {
-        return await this.getEventDetailsValue('Date');
+    getEventDate(): Promise<string> {
+        return this.getEventDetails('Date');
     }
 
-    async getEventVenue(): Promise<string> {
-        return await this.getEventDetailsValue('Venue');
+    getEventVenue(): Promise<string> {
+        return this.getEventDetails('Venue');
     }
 
-    async getEventCity(): Promise<string> {
-        return await this.getEventDetailsValue('City');
+    getEventCity(): Promise<string> {
+        return this.getEventDetails('City');
     }
 
-    private async getCustomerDetailsValue(labelName: string): Promise<string> {
+    private async getCustomerDetails(labelName: string): Promise<string> {
         // We construct a dynamic RegExp using the variable passed in
         const labelRegex = new RegExp(`^${labelName}$`, 'i');
 
-        const row = this.customerDetails.locator('div.flex').filter({has: this.page.locator('span').filter({ hasText: labelRegex })});
-            
+        const row = this.customerDetails.locator('div.flex').filter({ has: this.page.locator('span').filter({ hasText: labelRegex }) });
+
         const details = await row.locator('span')
-                        .nth(1).textContent();
+            .nth(1).textContent();
 
         if (!details) throw new Error(`Customer details were not found on ${labelName}`);
 
         return details.trim();
     }
 
-    async getCustomerName(): Promise<string> {
-        return await this.getCustomerDetailsValue('Name');
+    getCustomerName(): Promise<string> {
+        return this.getCustomerDetails('Name');
     }
 
-    async getCustomerEmail(): Promise<string> {
-        return await this.getCustomerDetailsValue('Email');
+    getCustomerEmail(): Promise<string> {
+        return this.getCustomerDetails('Email');
     }
 
-    async getCustomerPhone(): Promise<string> {
-        return await this.getCustomerDetailsValue('Phone');
+    getCustomerPhone(): Promise<string> {
+        return this.getCustomerDetails('Phone');
     }
 
-    private async getPaymentSummaryValue(labelName: string): Promise<string> {
+    private async getPaymentSummary(labelName: string): Promise<string> {
         // We construct a dynamic RegExp using the variable passed in
         const labelRegex = new RegExp(`^${labelName}$`, 'i');
 
-        const row = this.paymentSummary.locator('div.flex').filter({has: this.page.locator('span').filter({ hasText: labelRegex })});
-            
+        const row = this.paymentSummary.locator('div.flex').filter({ has: this.page.locator('span').filter({ hasText: labelRegex }) });
+
         const paymentText = await row.locator('span')
-                        .nth(1).textContent();
+            .nth(1).textContent();
 
         if (!paymentText) throw new Error(`Payment summary were not found at ${labelName}`);
 
@@ -124,18 +132,13 @@ export class BookingDetailsPage {
     }
 
     async getTickets(): Promise<number> {
-        const ticketText = await this.getPaymentSummaryValue('Tickets');
+        const ticketText = await this.getPaymentSummary('Tickets');
         const ticket = parseInt(ticketText);
         return ticket;
-
     }
 
     async getPricePerTicket(): Promise<number> {
-        const price = await this.getPaymentSummaryValue('Price per ticket');
-
-        if (!price) {
-            throw new Error("Price per ticket value was not found on the page or is null");
-        }
+        const price = await this.getPaymentSummary('Price per ticket');
 
         const cleanPrice = price.replace(/[^0-9.]/g, '');
         const pricePerTicket = parseFloat(cleanPrice);
@@ -146,11 +149,7 @@ export class BookingDetailsPage {
     }
 
     async getTotalPaid(): Promise<number> {
-        const priceText = await this.getPaymentSummaryValue('Total Paid');
-
-        if (!priceText) {
-            throw Error("total price not appeared on the page");
-        }
+        const priceText = await this.getPaymentSummary('Total Paid');
 
         const actulPrice = priceText.replace(/[^0-9.]/g, '');
         const totalPrice = parseFloat(actulPrice);
@@ -160,14 +159,14 @@ export class BookingDetailsPage {
         return totalPrice;
     }
 
-    async getRefundStatus() : Promise <string>{
+    async getRefundStatus(): Promise<string> {
         await this.checkEligibilityRefundBtn.click();
 
         await this.refundSpinner.waitFor({ state: 'hidden' });
 
         const status = await this.refundResult.locator('span strong').textContent();
-        if(!status) throw new Error('Refund status is not available');
-        return status; 
+        if (!status) throw new Error('Refund status is not available');
+        return status;
     }
 
 

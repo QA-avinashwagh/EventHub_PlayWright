@@ -1,21 +1,19 @@
-import {test} from "@playwright/test";
 import { AuthHelper } from "../../../utils/authHelper";
 import data from "../../../test_data/loginUser.json"
-import { HomePage } from "../../../pages/HomePage";
+import { test, expect } from "../../../fixtures/baseFixture";
 
 
-test("@homepage @regression verify featured events present on home page", async({page, request})=>{
+test("@homepage @regression verify featured events present on home page", async({page, request, homePage})=>{
 
     const authHelper = new AuthHelper();
-    const homePage = new HomePage(page);
 
     await authHelper.loginViaAPI(request,page,
             data.validUser1.email,
             data.validUser1.password
      )
 
-     await homePage.isLogedInUseEmailDisplayed(); 
-     await homePage.isfeatureEventTitleDisplayed();
+     await expect (homePage.loggedInUserEmail).toBeVisible(); 
+    expect (homePage.featureEventTitle).toBeVisible;
      
 
 })
