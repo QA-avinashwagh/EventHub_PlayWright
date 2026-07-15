@@ -3,22 +3,24 @@ import user from "../../test_data/bookingUserDetails.json";
 import { generateBookingPayload } from "../../utils/factories/bookingFactory";
 
 
-
-test("should be able to book event created by API", async ({ authSetup, eventResource, eventPage, eventBookingComponent, myBookingPage }) => {
+test("should be able to book event created by API", async ({ authSetup, eventResource, eventPage, eventDetailPage, myBookingPage }) => {
 
     const title = eventResource.title;
     await eventPage.goTo();
-    await eventPage.clickOnBookTickets(title);
-    await eventBookingComponent.addBookingDetails(user.Details.davidUser.fullName, user.Details.davidUser.email, user.Details.davidUser.phoneNumber)
+    const bookEvent = eventPage.findEvent(title);
+    await bookEvent.book();
+    const bookingForm = eventDetailPage.bookingForm();
+    await bookingForm.book(user.Details.davidUser.fullName, user.Details.davidUser.email, user.Details.davidUser.phoneNumber)
 
-    await expect(eventBookingComponent.confirmBookingText).toBeVisible();
-    const refId = await eventBookingComponent.getBookingRefId();
+    await expect(bookingForm.bookingConfirmMessage).toBeVisible();
+    const refId = await bookingForm.getBookingRefId();
 
-    await eventBookingComponent.clickOnViewBooking()
-    const myBookingRefId = await myBookingPage.getRefernceId(refId);
+    await bookingForm.viewBooking();
+    const bookingCard  = myBookingPage.findBooking(refId);
+    const myBookingRefId = bookingCard.getBookingId();
 
     expect(refId).toBe(myBookingRefId);
-    await expect(myBookingPage.getEventCard(refId)).toBeVisible();
+    await expect(bookingCard.root).toBeVisible();
 })
 
 
@@ -55,23 +57,28 @@ test("Should be displayed booking created and booked by API", async ({ authSetup
     refID = bookingResponse.body.data.bookingRef
 
     await myBookingPage.goTo();
-    await expect(myBookingPage.getEventCard(refID)).toBeVisible();
+    const bookingCard = myBookingPage.findBooking(refID);
+    expect (bookingCard.getBookingId()).toBe(refID);
+    await expect(bookingCard.root).toBeVisible();
 
 })
 
 
-test("should be able to update seat count after UI booking", async ({ authSetup, eventResource, eventPage, eventBookingComponent, eventService }) => {
+test("should be able to update seat count after UI booking", async ({ authSetup, eventResource, eventPage, eventDetailPage, eventService }) => {
 
     const title = eventResource.title;
     const eventId = eventResource.id;
     const intialSeatsCount = eventResource.totalSeats;
 
     await eventPage.goTo();
-    await eventPage.clickOnBookTickets(title);
-    await eventBookingComponent.increaseTicketCount();
+    const eventCard = eventPage.findEvent(title);
+    await eventCard.book();
 
-    await eventBookingComponent.addBookingDetails(user.Details.davidUser.fullName, user.Details.davidUser.email, user.Details.davidUser.phoneNumber);
-    await expect(eventBookingComponent.confirmBookingText).toBeVisible();
+    const bookingForm = eventDetailPage.bookingForm();
+    await bookingForm.increaseTicketCount();
+
+    await bookingForm.book(user.Details.davidUser.fullName, user.Details.davidUser.email, user.Details.davidUser.phoneNumber);
+    await expect(bookingForm.bookingConfirmMessage).toBeVisible();
 
     const getResponse = await eventService.getEvent(eventId);
     if (getResponse.status !== 200) {
@@ -84,7 +91,7 @@ test("should be able to update seat count after UI booking", async ({ authSetup,
 })
 
 
-test("should be able to cancel the booking created by API ", async ({authSetup, eventResource, eventPage, eventBookingComponent, myBookingPage, eventService }) => {
+test("should be able to cancel the booking created by API ", async ({authSetup, eventResource, eventPage, eventDetailPage, myBookingPage, eventService }) => {
 
     const title = eventResource.title;
     const seatsCount = eventResource.totalSeats;
@@ -92,13 +99,16 @@ test("should be able to cancel the booking created by API ", async ({authSetup, 
 
     // Booking
     await eventPage.goTo();
-    await eventPage.clickOnBookTickets(title);
-    await eventBookingComponent.addBookingDetails(user.Details.davidUser.fullName, user.Details.davidUser.email, user.Details.davidUser.phoneNumber)
+    const eventCard = eventPage.findEvent(title);
+    await eventCard.book();
 
-    await expect(eventBookingComponent.confirmBookingText).toBeVisible();
-    const refId = await eventBookingComponent.getBookingRefId();
+    const bookingForm = eventDetailPage.bookingForm();
+    await bookingForm.book(user.Details.davidUser.fullName, user.Details.davidUser.email, user.Details.davidUser.phoneNumber)
 
-    await eventBookingComponent.clickOnViewBooking();
+    await expect(bookingForm.bookingConfirmMessage).toBeVisible();
+    const refId = await bookingForm.getBookingRefId();
+
+    await bookingForm.viewBooking();
 
     // Checking count when Event is booked
     const getResponse = await eventService.getEvent(eventId);
@@ -109,12 +119,15 @@ test("should be able to cancel the booking created by API ", async ({authSetup, 
 
     expect(updatedBookCount).toBe(seatsCount - 1);
 
-    await myBookingPage.clickOnCancelBooking(refId);
-    await myBookingPage.confirmCancelBooking();
-    await myBookingPage.isCancelToastMsgDisplayed();
+    const bookedCard = myBookingPage.findBooking(refId);
+    await bookedCard.cancel();
+     
+    const dialog = myBookingPage.getCancelDialog();
+    await dialog.confirm();
+    await expect (myBookingPage.sucessCancelToast).toBeVisible();
 
-    const card = myBookingPage.getEventCard(refId);
-    await expect(card).not.toBeVisible();
+    const card = myBookingPage.findBooking(refId);
+    await expect(card.root).not.toBeVisible();
     
     // Checking count when Event is cancelled 
     const getResponse2 = await eventService.getEvent(eventId);

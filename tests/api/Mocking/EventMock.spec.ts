@@ -22,8 +22,8 @@ test('@Api-Mocking should display empty state illustration when list is empty', 
     });
 
     await eventPage.goTo();
-    await eventPage.isNoEventMsgDispalyed();
-    await eventPage.isAddNewButtonVisible();
+    await expect (eventPage.noEventMessage).toBeVisible();
+    await expect (eventPage.addNewButton).toBeVisible();
 });
 
 
@@ -56,8 +56,8 @@ test('@Api-Mocking should display skeleton during a slow API response', async ({
 
     await eventPage.waitForResultToLoad();
 
-    await eventPage.isNoEventMsgDispalyed();
-    await eventPage.isAddNewButtonVisible();
+    await expect (eventPage.noEventMessage).toBeVisible();
+    await expect (eventPage.addNewButton).toBeVisible();
 });
 
 
@@ -80,8 +80,7 @@ test('@API-Mocking should display an error when API gets failed', async ({ authS
     await eventPage.waitForSkeletonToAppear();
 
     await eventPage.waitForResultToLoad();
-    await eventPage.isAddNewButtonVisible();
-
+    await expect (eventPage.addNewButton).toBeVisible();
 })
 
 
@@ -120,8 +119,7 @@ test('@API-Mocking should display events mocked by API', async ({ authSetup, pag
     });
 
     await eventPage.goTo();
-    await expect(eventPage.getEventCard("Mock Summit 2026")).toBeVisible();
-    await eventPage.isAddNewButtonVisible();
+    await expect(eventPage.findEvent("Mock Summit 2026").root).toBeVisible();
 
 })
 
@@ -137,6 +135,6 @@ test('@API-Mocking should be able to handle network interruption', async ({ auth
     await eventPage.waitForSkeletonToAppear();
 
     await eventPage.waitForResultToLoad();
-    await eventPage.isAddNewButtonVisible();
+    await expect (eventPage.addNewButton).toBeVisible();
 
 })

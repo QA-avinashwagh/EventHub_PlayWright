@@ -1,6 +1,6 @@
 import test from "@playwright/test";
 import { generateEventPayload } from "./factories/eventFactory";
-import { EventService } from "../api/services/EventService";
+import { EventService } from "..//api/services/eventService";
 
 
 export async function CreateEventByApi(eventService: EventService) {

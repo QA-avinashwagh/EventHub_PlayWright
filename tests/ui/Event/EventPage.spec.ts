@@ -1,6 +1,6 @@
 import { test, expect } from "../../../fixtures/ApiFixture";
 import eventData from "../../../test_data/eventData.json";
-import { cleanupEvent } from "../../../utils/CleanUpHelper";
+import { cleanupEvent } from "../../../utils/CleanupHelper";
 import { getEventIdByTitle } from "../../../utils/factories/getEventHelper";
 
 test.describe('Event page ', () => {
@@ -58,8 +58,8 @@ test.describe('Event page ', () => {
 
                 await expect(createEventPage.allEventTitles).toBeVisible();
                 const event = createEventPage.getEventRow(eventData.iplFinals.title);
-                expect(event.root).toBeVisible();
-                expect(event.getTitle()).toBe(eventData.iplFinals.title);
+                await expect(event.root).toBeVisible();
+                expect(await event.getTitle()).toBe(eventData.iplFinals.title);
 
             } finally {
                 console.log(`before clean up : ${eventId}`)
@@ -82,7 +82,7 @@ test.describe('Event page ', () => {
             await expect(createEventPage.errorOnSeats).toBeVisible();
         });
 
-        test("@event @regression should display correct event details on booking page", async ({ authSetup, eventService, eventPage, createEventPage, bookingDetailPage }) => {
+        test("@event @regression should display correct event details on booking page", async ({ authSetup, eventService, eventPage, createEventPage, eventDetailPage }) => {
 
             let eventId: number | undefined;
             try {
@@ -98,13 +98,14 @@ test.describe('Event page ', () => {
                 await expect(createEventPage.allEventTitles).toBeVisible();
                 const event = createEventPage.getEventRow(eventData.diwaliCarnival.title);
                 await expect(event.root).toBeVisible();
-                expect(event.getTitle()).toBe(eventData.diwaliCarnival.title)
+                expect(await event.getTitle()).toBe(eventData.diwaliCarnival.title)
 
                 //Get event id using helper  
                 eventId = await getEventIdByTitle(eventService, eventData.diwaliCarnival.city, eventData.diwaliCarnival.title);
 
                 await eventPage.goTo();
                 const diwaliEvent = eventPage.findEvent(eventData.diwaliCarnival.title)
+                 
                 const eventPrice = await diwaliEvent.getPrice();
                 const availableEventSeats = await diwaliEvent.getAvailableSeats()
 
@@ -116,10 +117,10 @@ test.describe('Event page ', () => {
 
                 await diwaliEvent.book();
 
-                const bookingEventPrice = await bookingDetailPage.getPricePerTicket();
-                const bookingEventSeats = await bookingDetailPage.getTickets();
-                const bookingEventCity = await bookingDetailPage.getEventCity();
-                const bookingEventVenue = await bookingDetailPage.getEventVenue();
+                const bookingEventPrice = await eventDetailPage.getPricePerTicket();
+                const bookingEventSeats = await eventDetailPage.getTotalSeats();
+                const bookingEventCity = await eventDetailPage.getCity();
+                const bookingEventVenue = await eventDetailPage.getVenue();
 
                 expect(bookingEventPrice).toBe(actualPrice);
                 expect(bookingEventSeats).toBe(actualSeats);
@@ -133,77 +134,55 @@ test.describe('Event page ', () => {
 
         test.describe("Edit Event", () => {
 
-            test('@regression @event should be able to edit event created ', async ({ authSetup, eventService, eventPage, createEventPage }) => {
+            test('@regression @event should be able to edit event created ', async ({ authSetup, eventResource, eventService, eventPage, createEventPage }) => {
 
-                let eventId: number | undefined;
-                try {
+                //Navigetting to create page 
+                await eventPage.goTo();
+                await eventPage.clickOnAddNewEvent();
 
-                    await eventPage.goTo();
-                    await eventPage.clickOnAddNewEvent();
+                const event = createEventPage.getEventRow(eventResource.title);
+                await expect(event.root).toBeVisible();
+                expect(await event.getTitle()).toBe(eventResource.title);
 
-                    await createEventPage.createEvent(eventData.rockConcert);
-                    await expect(createEventPage.successMessage).toBeVisible();
-                    await createEventPage.disMissToast();
+                await event.edit();
 
-                    const event = createEventPage.getEventRow(eventData.rockConcert.title);
-                    await expect(event.root).toBeVisible();
-                    expect(event.getTitle()).toBe(eventData.rockConcert.title);
+                await expect(createEventPage.editTitle).toBeVisible();
 
-                    //Get event id using helper  
-                    eventId = await getEventIdByTitle(eventService, eventData.rockConcert.city, eventData.rockConcert.title)
+                await createEventPage.fillTitle("Pro Leauge kabdi");
+                await createEventPage.fillVenu("Indoor stadium pune");
 
-                    await event.edit();
+                await createEventPage.fillPrice("500");
+                await createEventPage.fillSeats("5");
 
-                    await expect(createEventPage.editTitle).toBeVisible();
+                await createEventPage.updateCategory("Sports");
 
-                    await createEventPage.fillTitle("Pro Leauge kabdi");
-                    await createEventPage.fillVenu("Indoor stadium pune");
+                await createEventPage.clickOnUpdateEvent();
+                await expect(createEventPage.updateMessage).toBeVisible();
 
-                    await createEventPage.fillPrice("500");
-                    await createEventPage.fillSeats("5");
-
-                    await createEventPage.updateCategory("Sports");
-
-                    await createEventPage.clickOnUpdateEvent();
-                    await expect(createEventPage.updateMessage).toBeVisible();
-
-                    const updateEvent = createEventPage.getEventRow("Pro Leauge kabdi");
-                    await expect(updateEvent.root).toBeVisible();
-                    await expect(updateEvent.getTitle()).toBe("Pro Leauge kabdi");
-                } finally {
-                    console.log(`befor clean up : ${eventId}`)
-                    await cleanupEvent(eventService, eventId)
-                }
-
+                const updateEvent = createEventPage.getEventRow("Pro Leauge kabdi");
+                await expect(updateEvent.root).toBeVisible();
+                expect(await updateEvent.getTitle()).toBe("Pro Leauge kabdi");
             })
 
-            test('@regression @event updating event seat to 0 should display an error message', async ({ authSetup, eventService, eventPage, createEventPage }) => {
+            test('@regression @event updating event seat to 0 should display an error message', async ({ authSetup, eventResource, eventService, eventPage, createEventPage }) => {
 
-                let eventId: number | undefined
-                try {
-                    await eventPage.goTo();
-                    await eventPage.clickOnAddNewEvent();
+                await eventPage.goTo();
+                await eventPage.clickOnAddNewEvent();
 
-                    await createEventPage.createEvent(eventData.diwaliCarnival);
-                    const event = createEventPage.getEventRow(eventData.diwaliCarnival.title);
 
-                    await expect(event.root).toBeVisible();
+                const event = createEventPage.getEventRow(eventResource.title);
 
-                    //Get event id using helper  
-                    eventId = await getEventIdByTitle(eventService, eventData.diwaliCarnival.city, eventData.diwaliCarnival.title)
+                await expect(event.root).toBeVisible();
+                expect(await event.getTitle()).toBe(eventResource.title);
 
-                    await event.edit();
+                await event.edit();
 
-                    await expect(createEventPage.editTitle).toBeVisible();
+                await expect(createEventPage.editTitle).toBeVisible();
 
-                    await createEventPage.fillSeats("0");
+                await createEventPage.fillSeats("0");
 
-                    await createEventPage.clickOnUpdateEvent();
-                    await expect(createEventPage.errorOnSeats).toBeVisible();
-                } finally {
-                    console.log(`befor clean up : ${eventId}`)
-                    await cleanupEvent(eventService, eventId)
-                }
+                await createEventPage.clickOnUpdateEvent();
+                await expect(createEventPage.errorOnSeats).toBeVisible();
 
             })
 
@@ -224,11 +203,11 @@ test.describe('Event page ', () => {
                 await createEventPage.disMissToast();
 
                 await expect(createEventPage.allEventTitles).toBeVisible();
-                expect(event.getTitle()).toBe(eventData.rockConcert.title);
+                expect(await event.getTitle()).toBe(eventData.rockConcert.title);
 
                 await event.delete();
                 const dialog = createEventPage.getDeleteDialog();
-                expect(dialog.root).toBeVisible();
+                await expect( dialog.root).toBeVisible();
                 await dialog.delete();
                 await expect(event.root).toHaveCount(0);
             });
@@ -250,8 +229,7 @@ test.describe('Event page ', () => {
                     await event.delete();
                     const dialog = createEventPage.getDeleteDialog();
                     await dialog.cancel();
-                    await expect(event.getTitle()).toBe(eventData.diwaliCarnival.title);
-
+                    expect(await event.getTitle()).toBe(eventData.diwaliCarnival.title);
                 }
                 finally {
                     console.log(`befor clean up : ${eventId}`)

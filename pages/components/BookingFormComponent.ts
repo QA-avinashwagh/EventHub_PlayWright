@@ -18,9 +18,6 @@ export class BookingFormComponent {
     private readonly confirmBookingBtn: Locator;
     private readonly totalPriceTxt: Locator
 
-    private readonly confirmBookingText: Locator;
-    private readonly viewMyBookingBtn: Locator;
-    private readonly refIdText: Locator;
 
     constructor(form: Locator) {
 
@@ -56,13 +53,6 @@ export class BookingFormComponent {
         this.totalPriceTxt = form.locator('div', { has: form.getByText('Total') });
         this.confirmBookingBtn = form.getByRole('button', { name: "Confirm Booking" });
 
-        //confirm booking 
-        this.confirmBookingText = form.getByRole('heading', { name: "Booking Confirmed! 🎉" });
-
-        this.viewMyBookingBtn = form.getByRole('link', { name: "View My Bookings" });
-
-        //refrence id 
-        this.refIdText = form.locator('.booking-ref');
 
     }
 
@@ -142,18 +132,6 @@ export class BookingFormComponent {
         return actualPrice;
     }
 
-    get bookingConfirmMessage(): Locator {
-        return this.confirmBookingText;
-    }
-
-    async getBookingRefId(): Promise<string> {
-        const id = await this.refIdText.textContent();
-        if (!id) throw new Error("Refrence id can not be found the booking page");
-        return id;
-    }
-
-    async viewBooking(): Promise<void> {
-        await this.viewMyBookingBtn.click();
-    }
+    
 
 }

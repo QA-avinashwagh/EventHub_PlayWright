@@ -1,4 +1,4 @@
-import { test, expect } from "../../../fixtures/baseFixture";
+    import { test, expect } from "../../../fixtures/baseFixture";
 import eventData from "../../../test_data/eventData.json";
 import user from "../../../test_data/bookingUserDetails.json";
 
@@ -19,12 +19,12 @@ test.describe('Event Booking', () => {
             const diwaliEvent = eventPage.findEvent(eventData.defaulDiwali.title);
             await diwaliEvent.book();
             const bookingForm = eventDetailPage.bookingForm();
-            await bookingForm.book(user.Details.davidUser.fullName, user.Details.davidUser.email, user.Details.davidUser.phoneNumber)
+            await bookingForm.book(user.Details.davidUser.fullName, user.Details.davidUser.email, user.Details.davidUser.phoneNumber);
 
-            await expect(bookingForm.bookingConfirmMessage).toBeVisible();
-            const refId = await bookingForm.getBookingRefId();
+            await expect(eventDetailPage.bookingConfirmMessage).toBeVisible();
+            const refId = await eventDetailPage.getBookingRefId();
             console.log(`refrence id genrated on booking page ${refId}`);
-            await bookingForm.viewBooking();
+            await eventDetailPage.viewBooking();
             const bookingCard = myBookingPage.findBooking(refId);
             const myBookingRefId = await bookingCard.getBookingId();
             console.log(`refrence id on the Mybooking page ${myBookingRefId}`);
@@ -114,10 +114,10 @@ test.describe('Event Booking', () => {
 
             await bookingForm.book(user.Details.emmaUser.fullName, user.Details.emmaUser.email, user.Details.emmaUser.phoneNumber);
 
-            await expect(bookingForm.bookingConfirmMessage).toBeVisible();
-            const refId = await bookingForm.getBookingRefId();
+            await expect(eventDetailPage.bookingConfirmMessage).toBeVisible();
+            const refId = await eventDetailPage.getBookingRefId();
 
-            await bookingForm.viewBooking()
+            await eventDetailPage.viewBooking()
 
             const bookingCard = myBookingPage.findBooking(refId)
             const myBookingRefId = await bookingCard.getBookingId();
@@ -145,11 +145,11 @@ test.describe('Event Booking', () => {
             const bookingForm = eventDetailPage.bookingForm();
             await bookingForm.book(user.Details.emmaUser.fullName, user.Details.emmaUser.email, user.Details.emmaUser.phoneNumber);
 
-            await expect(bookingForm.bookingConfirmMessage).toBeVisible();
-            const refId = await bookingForm.getBookingRefId();
+            await expect(eventDetailPage.bookingConfirmMessage).toBeVisible();
+            const refId = await eventDetailPage.getBookingRefId();
             console.log(`refrence id genrated on booking page ${refId}`);
 
-            await bookingForm.viewBooking();
+            await eventDetailPage.viewBooking();
 
             const bookingCard = myBookingPage.findBooking(refId)
             const myBookingRefId = await bookingCard.getBookingId();
@@ -184,13 +184,11 @@ test.describe('Event Booking', () => {
             const bookingform = eventDetailPage.bookingForm();
             await bookingform.book(user.Details.emmaUser.fullName, user.Details.emmaUser.email, user.Details.emmaUser.phoneNumber);
 
-            await expect(bookingform.bookingConfirmMessage).toBeVisible();
+            await expect(eventDetailPage.bookingConfirmMessage).toBeVisible();
 
-            const refId = await bookingform.getBookingRefId();
+            const refId = await eventDetailPage.getBookingRefId();
 
-            await bookingform.viewBooking()
-
-
+            await eventDetailPage.viewBooking();
             const bookingCard = myBookingPage.findBooking(refId)
             await bookingCard.viewDetails();
 
@@ -224,11 +222,11 @@ test.describe('Event Booking', () => {
 
             await bookingForm.book(user.Details.emmaUser.fullName, user.Details.emmaUser.email, user.Details.emmaUser.phoneNumber);
 
-            await expect(bookingForm.bookingConfirmMessage).toBeVisible();
+            await expect(eventDetailPage.bookingConfirmMessage).toBeVisible();
 
-            const refId = await bookingForm.getBookingRefId();
+            const refId = await eventDetailPage.getBookingRefId();
 
-            await bookingForm.viewBooking()
+            await eventDetailPage.viewBooking()
 
             const bookingCard = myBookingPage.findBooking(refId)
             await bookingCard.viewDetails();
@@ -255,11 +253,11 @@ test.describe('Event Booking', () => {
             const bookingform = eventDetailPage.bookingForm();
             await bookingform.book(user.Details.emmaUser.fullName, user.Details.emmaUser.email, user.Details.emmaUser.phoneNumber);
 
-            await expect(bookingform.bookingConfirmMessage).toBeVisible();
+            await expect(eventDetailPage.bookingConfirmMessage).toBeVisible();
 
-            const refId = await bookingform.getBookingRefId();
+            const refId = await eventDetailPage.getBookingRefId();
 
-            await bookingform.viewBooking()
+            await eventDetailPage.viewBooking()
 
             const bookingCard = myBookingPage.findBooking(refId)
             await bookingCard.viewDetails();
@@ -281,11 +279,11 @@ test.describe('Event Booking', () => {
 
             await bookingForm.book(user.Details.emmaUser.fullName, user.Details.emmaUser.email, user.Details.emmaUser.phoneNumber);
 
-            await expect(bookingForm.bookingConfirmMessage).toBeVisible();
+            await expect(eventDetailPage.bookingConfirmMessage).toBeVisible();
 
-            const refId = await bookingForm.getBookingRefId();
+            const refId = await eventDetailPage.getBookingRefId();
 
-            await bookingForm.viewBooking()
+            await eventDetailPage.viewBooking()
 
             const bookingCard = myBookingPage.findBooking(refId)
             await bookingCard.viewDetails();
@@ -308,11 +306,11 @@ test.describe('Event Booking', () => {
             const bookingForm = eventDetailPage.bookingForm();
             await bookingForm.book(user.Details.emmaUser.fullName, user.Details.emmaUser.email, user.Details.emmaUser.phoneNumber);
 
-            await expect(bookingForm.bookingConfirmMessage).toBeVisible();
+            await expect(eventDetailPage.bookingConfirmMessage).toBeVisible();
 
-            const refId = await bookingForm.getBookingRefId();
+            const refId = await eventDetailPage.getBookingRefId();
 
-            await bookingForm.viewBooking()
+            await eventDetailPage.viewBooking();
 
             const bookingCard = myBookingPage.findBooking(refId)
             await bookingCard.cancel();
@@ -337,14 +335,14 @@ test.describe('Event Booking', () => {
 
             await bookingForm.book(user.Details.emmaUser.fullName, user.Details.emmaUser.email, user.Details.emmaUser.phoneNumber);
 
-            await expect(bookingForm.bookingConfirmMessage).toBeVisible();
+            await expect(eventDetailPage.bookingConfirmMessage).toBeVisible();
 
-            const refId = await bookingForm.getBookingRefId();
+            const refId = await eventDetailPage.getBookingRefId();
 
-            await bookingForm.viewBooking()
+            await eventDetailPage.viewBooking()
 
             const bookingCard = myBookingPage.findBooking(refId)
-            await bookingCard.cancel()
+            await bookingCard.cancel();
 
             const dialog = myBookingPage.getCancelDialog();
 

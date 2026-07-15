@@ -1,4 +1,4 @@
-import { EventService } from "../../api/services/EventService";
+import { EventService } from "../../api/services/eventService";
 
 //Get id for created event using get all event - usage in clean up 
 

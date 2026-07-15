@@ -53,10 +53,9 @@ export class BookingDetailsPage {
         return new BookingCancelDialogComponent(this.cancelDialog);
     }
 
-    get sucessCancelToast() : Locator{
+    get sucessCancelToast(): Locator {
         return this.cancelToastMsg
     }
-
 
     private async getEventDetails(labelName: string): Promise<string> {
         // We construct a dynamic RegExp using the variable passed in

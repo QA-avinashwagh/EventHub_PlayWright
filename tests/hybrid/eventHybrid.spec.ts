@@ -22,8 +22,9 @@ test.describe("API+UI", () => {
             eventID = response.body.data.id;
 
             await eventPage.goTo();
-            expect(eventPage.getEventCard(payload.title)).toBeVisible();
-            expect(await eventPage.getEventPrice(payload.title)).toBe(payload.price);
+            const eventCard = eventPage.findEvent(payload.title);
+            await expect(eventCard.root).toBeVisible();
+             expect(eventCard.getPrice()).toBe(payload.price);
 
         } finally {
             await cleanupEvent(eventService, eventID);
@@ -48,14 +49,15 @@ test.describe("API+UI", () => {
             await eventService.updateEvent(eventID, updatePayload)
 
             await eventPage.goTo();
-            expect(eventPage.getEventCard(updatePayload.title)).toBeVisible();
-            expect(await eventPage.getEventPrice(updatePayload.title)).toBe(payload.price);
+            const eventCard = eventPage.findEvent(updatePayload.title);
+            await expect(eventCard.root).toBeVisible();
+            expect(eventCard.getPrice).toBe(payload.price);
         } finally {
             await cleanupEvent(eventService, eventID);
         }
     })
 
-    test('Should display correct detials on booking page created by API ', async ({ eventService, authSetup, eventPage, eventBookingComponent }) => {
+    test('Should display correct detials on booking page created by API ', async ({ eventService, authSetup, eventPage, eventDetailPage }) => {
 
         const payload = generateEventPayload();
 
@@ -73,19 +75,20 @@ test.describe("API+UI", () => {
             eventId = response.body.data.id;
 
             await eventPage.goTo();
-            await expect(eventPage.getEventCard(payload.title)).toBeVisible();
-            await eventPage.clickOnBookTickets(payload.title);
-            expect(await eventBookingComponent.getBookingEventVenue()).toBe(payload.venue);
-            expect(await eventBookingComponent.getBookingEventCity()).toBe(payload.city);
-            expect(await eventBookingComponent.getPricePerTicket()).toBe(payload.price);
-            expect(await eventBookingComponent.getBookingEventSeats()).toBe(payload.totalSeats);
+            const eventCard = eventPage.findEvent(response.body.data.title);
+            await expect(eventCard.root).toBeVisible();
+            await eventCard.book();
+            expect(await eventDetailPage.getVenue()).toBe(payload.venue);
+            expect(await eventDetailPage.getCity()).toBe(payload.city);
+            expect(await eventDetailPage.getPricePerTicket()).toBe(payload.price);
+            expect(await eventDetailPage.getTotalSeats()).toBe(payload.totalSeats);
 
         } finally {
             await cleanupEvent(eventService, eventId)
         }
     })
 
-    test("should be able to delete the event created by API", async ({ eventService, authSetup, eventPage, eventFormComponent }) => {
+    test("should be able to delete the event created by API", async ({ eventService, authSetup, eventPage, createEventPage }) => {
 
         const payload = generateEventPayload();
 
@@ -102,18 +105,20 @@ test.describe("API+UI", () => {
         eventID = response.body.data.id;
 
         await eventPage.goTo();
-        expect(eventPage.getEventCard(payload.title)).toBeVisible();
+        expect(eventPage.findEvent(payload.title).root).toBeVisible();
         await eventPage.clickOnAddNewEvent();
 
-        await expect(eventFormComponent.getEventRow(payload.title)).toBeVisible();
+        const eventRow = createEventPage.getEventRow(payload.title);
+        await expect(eventRow.root).toBeVisible();
 
-        await eventFormComponent.deleteEvent(payload.title);
-        await eventFormComponent.clickOnConfirmDelete();
-        await expect(eventFormComponent.getEventRow(payload.title)).toHaveCount(0);
+        await eventRow.delete();
+        const dialog = createEventPage.getDeleteDialog();
+        await dialog.delete();
+        await expect(eventPage.findEvent(payload.title).root).toHaveCount(0);
 
     })
 
-    test("should be able to book event created by API", async({eventService,authSetup, eventPage, eventBookingComponent, myBookingPage})=>{
+    test("should be able to book event created by API", async({eventService,authSetup, eventPage, eventDetailPage, myBookingPage})=>{
 
         const payload = generateEventPayload();
 
@@ -131,17 +136,20 @@ test.describe("API+UI", () => {
             eventId = response.body.data.id;
 
             await eventPage.goTo();
-            await expect(eventPage.getEventCard(payload.title)).toBeVisible();
-            await eventPage.clickOnBookTickets(payload.title);
+            const eventCard = eventPage.findEvent(payload.title);
+            await expect(eventCard.root).toBeVisible();
+            await eventCard.book();
             
-            await eventBookingComponent.addBookingDetails(user.Details.sarahUser.fullName, user.Details.sarahUser.email, user.Details.sarahUser.phoneNumber);
+            const bookingForm = eventDetailPage.bookingForm();
+            await bookingForm.book(user.Details.sarahUser.fullName, user.Details.sarahUser.email, user.Details.sarahUser.phoneNumber);
 
-            await expect(eventBookingComponent.confirmBookingText).toBeVisible();
-            const refId = await eventBookingComponent.getBookingRefId();
+            await expect(bookingForm.bookingConfirmMessage).toBeVisible();
+            const refId = await bookingForm.getBookingRefId();
 
-            await eventBookingComponent.clickOnViewBooking()
+            await bookingForm.viewBooking()
 
-            const myBookingRefId = await myBookingPage.getRefernceId(refId);
+            const myBooking =  myBookingPage.findBooking(refId);
+            const myBookingRefId = await myBooking.getBookingId();
             expect(refId).toBe(myBookingRefId);
 
         } finally {
@@ -172,8 +180,8 @@ test.describe("API+UI", () => {
                 await eventPage.filterCity(payload.city);
 
                 await eventPage.waitForResultToLoad();
-                await expect(eventPage.getEventCard(payload.title)).toHaveCount(1);
-                await expect(eventPage.getEventCard(payload.title)).toBeVisible();
+                await expect(eventPage.findEvent(payload.title).root).toHaveCount(1);
+                await expect(eventPage.findEvent(payload.title).root).toBeVisible();
             
             } finally {
                 await cleanupEvent(eventService, eventId)

@@ -1,11 +1,12 @@
 import test from "@playwright/test";
-import { EventService } from "../api/services/EventService";
+import { EventService } from "../api/services/eventService";
 
 
 export async function cleanupEvent(eventService: EventService, eventId?: number) {
 
     if (!eventId) {
-        throw new Error(`event id not created : ${eventId}`)
+        console.warn(`Clean up skipped : No event id avilable ${eventId}`);
+        return;
     }
     try {
         const reseponse = await eventService.deleteEvent(eventId);

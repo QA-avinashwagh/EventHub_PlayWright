@@ -23,8 +23,8 @@ test("@API-Mocking should display empty state illustration when list is empty", 
     });
 
     await myBookingPage.goTo();
-    await myBookingPage.isNoBookingTitleDisplayed();
-    await myBookingPage.isNoBookingMsgDisplayed();
+    await expect(myBookingPage.noBookingHeading).toBeVisible();
+    await expect(myBookingPage.noBookingMessage).toBeVisible();
 })
 
 test('@API-Mocking should display an error when API gets failed', async ({ authSetup, page, myBookingPage }) => {
@@ -42,13 +42,12 @@ test('@API-Mocking should display an error when API gets failed', async ({ authS
     });
 
     await myBookingPage.goTo();
-    await myBookingPage.isFailedToLoadHeadingVisible();
-    await myBookingPage.isFailToConnectDisplayed();
-    await myBookingPage.isRetryButtonVisbile();
+    await expect (myBookingPage.headingFailToLoadMessage).toBeVisible();
+    await expect(myBookingPage.failToConnectMessage).toBeVisible();
+    await expect (myBookingPage.retryButton).toBeVisible();
 })
 
-test('@API-Mocking should be able to book mock event displaye in the event ', async ({ authSetup, page, eventPage, eventBookingComponent, myBookingPage }) => {
-
+test('@API-Mocking should be able to book mock event displaye in the event ', async ({ authSetup, page, eventPage, createEventPage,eventDetailPage, myBookingPage }) => {
 
     page.on('request', request => {
     console.log(
@@ -91,11 +90,13 @@ validateHeaderName
     });
 
     await eventPage.goTo();
-    await expect(eventPage.getEventCard("Mock Summit 2026")).toBeVisible();
+    const mockEvent = eventPage.findEvent("Mock Summit 2026");
+    await expect(mockEvent.root).toBeVisible();
 
-    await eventPage.clickOnBookTickets("Mock Summit 2026");
-
-    await eventBookingComponent.enterBookingDetails(user.Details.davidUser.fullName, user.Details.davidUser.email, user.Details.davidUser.phoneNumber);
+    await mockEvent.book();
+    const bookingForm = eventDetailPage.bookingForm(); 
+    await expect(bookingForm.root).toBeVisible();
+    await bookingForm.book(user.Details.davidUser.fullName, user.Details.davidUser.email, user.Details.davidUser.phoneNumber);
 
     await page.route('**/api/bookings*', async (route) => {
 
@@ -141,10 +142,10 @@ validateHeaderName
         });
     });
 
-    await eventBookingComponent.clickOnConfirmBooking();
+    await bookingForm.confirmBooking();
 
-    await expect(eventBookingComponent.confirmBookingText).toBeVisible();
-    const refId = await eventBookingComponent.getBookingRefId();
+    await expect(bookingForm.bookingConfirmMessage).toBeVisible();
+    const refId = await bookingForm.getBookingRefId();
 
     await page.route('**api/bookings*', async (route) => {
 
@@ -191,9 +192,9 @@ validateHeaderName
         });
     });
 
-    await eventBookingComponent.clickOnViewBooking();
+    await bookingForm.viewBooking();
 
-    await expect(myBookingPage.getEventCard(refId)).toBeVisible();
+    await expect(myBookingPage.findBooking(refId).root).toBeVisible();
 })
 
 test('@API-Mocking should be able to mock seat count and verify the behavoiur', async ({ authSetup, page, eventPage }) => {
@@ -231,8 +232,9 @@ test('@API-Mocking should be able to mock seat count and verify the behavoiur', 
     });
 
     await eventPage.goTo();
-    await expect(eventPage.getEventCard("Mock Summit 2026")).toBeVisible();
-    await eventPage.isSoldOutTextVisible(); 
-    await expect(eventPage.getSoldOutButton("Mock Summit 2026")).toBeVisible();
+    const event = eventPage.findEvent("Mock Summit 2026");
+    await expect(event.root).toBeVisible();
+    await expect (event.soldOutText).toBeVisible(); 
+    await expect(event.soldOutButton).toBeVisible();
 
 });

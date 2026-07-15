@@ -4,7 +4,7 @@ import { BookingFormComponent } from "./components/BookingFormComponent";
 export class EventDetailsPage {
 
     //Event Details locator 
-    private readonly title : Locator;
+    private readonly title: Locator;
     private readonly bookingTicketPrice: Locator;
     private readonly bookingTicketDate: Locator;
     private readonly bookingTicketTime: Locator;
@@ -13,12 +13,17 @@ export class EventDetailsPage {
     private readonly bookingTicketAvailability: Locator;
 
     //Booking form component
-    private readonly bookingFormRoot : Locator;
+    private readonly bookingFormRoot: Locator;
+
+    
+    private readonly confirmBookingText: Locator;
+    private readonly viewMyBookingBtn: Locator;
+    private readonly refIdText: Locator;
 
     constructor(page: Page) {
 
         //Event Details
-        this.title = page.getByRole('heading');  
+        this.title = page.getByRole('heading');
         this.bookingTicketPrice = page.locator('div').filter({ hasText: /^Price per ticket/i });
         this.bookingTicketDate = page.locator('div').filter({ hasText: /^Date/i });
         this.bookingTicketTime = page.locator('div').filter({ hasText: /^Time/i });
@@ -26,10 +31,19 @@ export class EventDetailsPage {
         this.bookingTicketCity = page.locator('div').filter({ hasText: /^City/i });
         this.bookingTicketAvailability = page.locator('div').filter({ hasText: /^Available/i });
 
-        this.bookingFormRoot = page.getByRole('form');
+        this.bookingFormRoot = page.locator('form');
+
+        
+        //confirm booking 
+        this.confirmBookingText = page.getByRole('heading', { name: "Booking Confirmed! 🎉" });
+
+        this.viewMyBookingBtn = page.getByRole('link', { name: "View My Bookings" });
+
+        //refrence id 
+        this.refIdText = page.locator('.booking-ref');
     }
 
-    get Title() : Locator{
+    get Title(): Locator {
         return this.title;
     }
 
@@ -70,10 +84,16 @@ export class EventDetailsPage {
         const city = await this.extractTextFromDetails(this.bookingTicketCity, "City");
         return city;
     }
-    
+
     private async getSeatsValues(): Promise<[number, number]> {
         const seatsText = await this.extractTextFromDetails(this.bookingTicketAvailability, "Seats");
-        const seatValues = seatsText.split("/").map(text => Number(text.trim()));
+        const seatValues = seatsText.split("/").map(text => Number(text.replace(/[^0-9]/g, "")));
+
+        if (seatValues.some(Number.isNaN)) {
+            throw new Error(
+                `Unable to parse seat values from "${seatsText}"`
+            );
+        }
         return [seatValues[0], seatValues[1]];
     }
 
@@ -89,6 +109,20 @@ export class EventDetailsPage {
 
     bookingForm(): BookingFormComponent {
         return new BookingFormComponent(this.bookingFormRoot);
+    }
+
+    get bookingConfirmMessage(): Locator {
+        return this.confirmBookingText;
+    }
+
+    async getBookingRefId(): Promise<string> {
+        const id = await this.refIdText.textContent();
+        if (!id) throw new Error("Refrence id can not be found the booking page");
+        return id;
+    }
+
+    async viewBooking(): Promise<void> {
+        await this.viewMyBookingBtn.click();
     }
 
 }

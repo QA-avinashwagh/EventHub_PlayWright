@@ -1,6 +1,5 @@
 import { Locator } from "@playwright/test";
 
-
 export class EventCardComponent {
 
     private readonly card: Locator
@@ -38,7 +37,7 @@ export class EventCardComponent {
     }
 
     get soldOutText(): Locator {
-        return this.card.getByText('Sold Out');
+        return this.card.getByText('Sold Out').first();
     }
 
 }

@@ -4,7 +4,7 @@
     test('@api-booking should be able to book default event successfully', async ({ bookingService }) => {
 
         // using default event as to create booking 
-        const bookingPayload = generateBookingPayload(3, 1);
+        const bookingPayload = generateBookingPayload(2, 1);
 
         test.info().attach("Create booking payload",
             {
