@@ -168,5 +168,21 @@ export class BookingDetailsPage {
         return status;
     }
 
+    async handleDialog(action : "accept" | "dismiss") : Promise<string>{
+
+        const dialog = await this.page.waitForEvent("dialog");
+
+        const message = dialog.message();
+
+        if (action === "accept"){
+            await dialog.accept();
+        }
+        else {
+            await dialog.dismiss();
+        }
+
+        return message; 
+    }
+
 
 }

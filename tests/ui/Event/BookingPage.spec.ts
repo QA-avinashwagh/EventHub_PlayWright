@@ -1,4 +1,4 @@
-    import { test, expect } from "../../../fixtures/baseFixture";
+import { test, expect } from "../../../fixtures/ApiFixture";
 import eventData from "../../../test_data/eventData.json";
 import user from "../../../test_data/bookingUserDetails.json";
 
@@ -26,6 +26,7 @@ test.describe('Event Booking', () => {
             console.log(`refrence id genrated on booking page ${refId}`);
             await eventDetailPage.viewBooking();
             const bookingCard = myBookingPage.findBooking(refId);
+            expect(bookingCard.root).toBeVisible();
             const myBookingRefId = await bookingCard.getBookingId();
             console.log(`refrence id on the Mybooking page ${myBookingRefId}`);
             expect(refId).toBe(myBookingRefId);
@@ -34,7 +35,6 @@ test.describe('Event Booking', () => {
         test("@regression @booking should display validation errors for empty booking details", async ({ authSetup, eventPage, eventDetailPage }) => {
 
             await eventPage.goTo();
-
             const moonsoonEvent = eventPage.findEvent(eventData.defaultMonsoon.title);
 
             await moonsoonEvent.book();
@@ -42,9 +42,11 @@ test.describe('Event Booking', () => {
             await bookingForm.confirmBooking();
 
             await expect(bookingForm.fullNameError).toBeVisible();
+            await expect(bookingForm.fullNameError).toHaveText("Name must be at least 2 chars");
             await expect(bookingForm.emailError).toBeVisible();
+            await expect(bookingForm.emailError).toHaveText("Enter a valid email");
             await expect(bookingForm.phoneError).toBeVisible();
-
+            await expect(bookingForm.phoneError).toHaveText("Enter a valid 10-digit phone");
         });
 
     })
@@ -83,11 +85,11 @@ test.describe('Event Booking', () => {
             expect(actualTotalPrice).toBe(expectedTotalPrice);
         });
 
-        test("@regression @booking should prevent increasing ticket count above 10", async ({ authSetup, eventPage, eventDetailPage }) => {
+        test("@regression @booking should prevent increasing ticket count above 10", async ({ authSetup, eventResource, eventPage, eventDetailPage }) => {
 
             await eventPage.goTo();
 
-            const summitEvent = eventPage.findEvent(eventData.defaultSummit.title);
+            const summitEvent = eventPage.findEvent(eventResource.title);
 
             await summitEvent.book();
             const bookingForm = eventDetailPage.bookingForm();
@@ -102,10 +104,10 @@ test.describe('Event Booking', () => {
 
     test.describe('Booking details', () => {
 
-        test('@regression @booking My Booking should display correct event details', async ({ authSetup, eventPage, eventDetailPage, myBookingPage }) => {
+        test('@regression @booking My Booking should display correct event details', async ({ authSetup, eventResource, eventPage, eventDetailPage, myBookingPage }) => {
 
             await eventPage.goTo();
-            const summitEvent = eventPage.findEvent(eventData.defaultSummit.title);
+            const summitEvent = eventPage.findEvent(eventResource.title);
 
             await summitEvent.book();
             const bookingForm = eventDetailPage.bookingForm();
@@ -128,14 +130,14 @@ test.describe('Event Booking', () => {
             const bookingCardTicket = await bookingCard.getBookedEventTicketCount();
 
             expect(bookingCardCity).toBe(eventCity);
-            expect(bookingCardTitle).toBe(eventData.defaultSummit.title);
+            expect(bookingCardTitle).toBe(eventResource.title);
             expect(bookingCardTicket).toBe(ticketCount);
         })
 
-        test("@regression @booking On booking event should display correct event details", async ({ authSetup, eventPage, eventDetailPage, myBookingPage, bookingDetailPage }) => {
+        test("@regression @booking On booking event should display correct event details", async ({ authSetup, eventResource, eventPage, eventDetailPage, myBookingPage, bookingDetailPage }) => {
 
             await eventPage.goTo();
-            const summitEvent = eventPage.findEvent(eventData.defaultSummit.title);
+            const summitEvent = eventPage.findEvent(eventResource.title);
 
             await summitEvent.book();
             const eventCity = await eventDetailPage.getCity();
@@ -160,6 +162,8 @@ test.describe('Event Booking', () => {
             await bookingCard.viewDetails();
 
             const detRefId = await bookingDetailPage.getRefID();
+            console.log(`refrence id on the Mybooking detail page ${detRefId}`);
+
             expect(refId).toBe(detRefId);
 
             const eventTitle = await bookingDetailPage.getEventTitle();
@@ -167,18 +171,18 @@ test.describe('Event Booking', () => {
             const bookingDate = await bookingDetailPage.getEventDate()
             const bookingVenue = await bookingDetailPage.getEventVenue();
 
-            expect(eventTitle).toBe(eventData.defaultSummit.title);
+            expect(eventTitle).toBe(eventResource.title);
             expect(eventCity).toBe(bookingCity);
             expect(eventVenue).toBe(bookingVenue);
             expect(bookingDate).toContain(eventDate);
 
         })
 
-        test("@regression @booking on booking event should displayed correct customer details ", async ({ authSetup, eventPage, eventDetailPage, myBookingPage, bookingDetailPage }) => {
+        test("@regression @booking on booking event should displayed correct customer details ", async ({ authSetup, eventResource, eventPage, eventDetailPage, myBookingPage, bookingDetailPage }) => {
 
             await eventPage.goTo();
 
-            const moonsoonEvent = eventPage.findEvent(eventData.defaultMonsoon.title);
+            const moonsoonEvent = eventPage.findEvent(eventResource.title);
 
             await moonsoonEvent.book();
             const bookingform = eventDetailPage.bookingForm();
@@ -202,11 +206,11 @@ test.describe('Event Booking', () => {
 
         })
 
-        test("@regression @booking should display correct payment summary for multiple tickets", async ({ authSetup, eventPage, eventDetailPage, myBookingPage, bookingDetailPage }) => {
+        test("@regression @booking should display correct payment summary for multiple tickets", async ({ authSetup, eventResource, eventPage, eventDetailPage, myBookingPage, bookingDetailPage }) => {
 
             await eventPage.goTo();
 
-            const moonsoonEvent = eventPage.findEvent(eventData.defaultMonsoon.title);
+            const moonsoonEvent = eventPage.findEvent(eventResource.title);
 
             await moonsoonEvent.book();
             const bookingForm = eventDetailPage.bookingForm();
@@ -214,7 +218,7 @@ test.describe('Event Booking', () => {
 
             const ticketCount = await bookingForm.getCurrentTicketCount();
             expect(ticketCount).toBe(2);
-            const pricePerTicket = await bookingDetailPage.getPricePerTicket();
+            const pricePerTicket = await eventDetailPage.getPricePerTicket();
             const actualTotalPrice = pricePerTicket * (ticketCount);
 
             const expectedTotalPrice = await bookingForm.getTotalPrice();
@@ -353,7 +357,12 @@ test.describe('Event Booking', () => {
         test('@regression @booking should clear all bookings successfully', async ({ authSetup, myBookingPage }) => {
 
             await myBookingPage.goTo();
-            await myBookingPage.clearAllBookings();
+            //await expect(myBookingPage.title).toBeVisible();
+
+            const message = await myBookingPage.handleDialog("accept", () => myBookingPage.clearAllBookings());
+
+            expect(message).toBe("Clear all your bookings? This cannot be undone.");
+
             await expect(myBookingPage.noBookingHeading).toBeVisible();
             await expect(myBookingPage.noBookingMessage).toBeVisible();
         })

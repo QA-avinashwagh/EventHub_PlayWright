@@ -20,7 +20,6 @@ export class BookingCardComponent {
         return this.card;
     }
 
-
     async viewDetails(): Promise<void> {
         await this.card.getByRole('button', { name: /View Details/i }).click();
     }
@@ -30,7 +29,7 @@ export class BookingCardComponent {
     }
 
     async getBookingId(): Promise<string> {
-        const id = await this.card.locator('div', { has: this.card.getByTestId('booking-id') }).locator('span').first().textContent();
+        const id = await this.card.locator('.booking-ref').textContent();
         if (!id) throw new Error(`Refernce ID not found : ${this.refId}`);
         return id.trim();
     }

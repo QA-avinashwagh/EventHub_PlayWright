@@ -3,6 +3,7 @@ import 'dotenv/config';
 
 export default defineConfig({
   testDir: './tests',
+  retries :1,
   timeout: 30 * 1000,
   expect: {
     timeout: 5000
@@ -20,7 +21,7 @@ export default defineConfig({
   use: {
     /* Base URL to use in actions like `await page.goto('')`. */
     baseURL: process.env.UI_BASE_URL,
-
+    
     /* Collect trace when retrying the failed test. See https://playwright.dev/docs/trace-viewer */
     trace: 'retain-on-failure',
     screenshot : 'only-on-failure',

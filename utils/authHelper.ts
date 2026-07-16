@@ -17,9 +17,18 @@ export class AuthHelper  {
         await page.evaluate((token) => {
             localStorage
                 .setItem("eventhub_token", token)
-        }, token)
+        }, token); 
 
-        await page.reload();
+    //     console.log(
+    //             await page.evaluate(() =>
+    //                     Object.entries(localStorage)
+    //     )
+    // );
+    
+        // console.log(page.url());
+        // await page.waitForTimeout(5000);
+
+        await page.goto("/");
         return page;
 
     }

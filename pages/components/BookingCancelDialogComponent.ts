@@ -17,7 +17,7 @@ export class BookingCancelDialogComponent {
     }
 
     async dismiss() : Promise<void>{
-        await this.dialog.getByRole('button', { name: /Cancel/i }).click();
+        await this.dialog.getByRole('button', { name: 'Cancel',  exact: true }).click();
     }
 
     get title() : Locator{

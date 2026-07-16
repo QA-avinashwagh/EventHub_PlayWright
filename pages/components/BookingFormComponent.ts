@@ -36,21 +36,15 @@ export class BookingFormComponent {
         //error on user details 
         // This finds the parent container that has the "Full Name" label,
         // then finds the red error paragraph inside it.
-        this.errorOnFullname = form.locator('div')
-            .filter({ has: form.getByLabel('Full Name') })
-            .locator('p.text-red-600')
+        this.errorOnFullname = form.locator('p.text-red-600')
             .filter({ hasText: /name/i });
-        this.errorOnEmail = form.locator('div')
-            .filter({ has: form.getByLabel('Email') })
-            .locator('p.text-red-600')
+        this.errorOnEmail = form.locator('p.text-red-600')
             .filter({ hasText: /email/i });
-        this.errorOnPhone = form.locator('div')
-            .filter({ has: form.getByLabel('Phone Number') })
-            .locator('p.text-red-600')
+        this.errorOnPhone = form.locator('p.text-red-600')
             .filter({ hasText: /phone/i });
 
         //total price 
-        this.totalPriceTxt = form.locator('div', { has: form.getByText('Total') });
+        this.totalPriceTxt = form.getByText(/^\$/);
         this.confirmBookingBtn = form.getByRole('button', { name: "Confirm Booking" });
 
 
@@ -121,7 +115,7 @@ export class BookingFormComponent {
     }
 
     async getTotalPrice(): Promise<number> {
-        const totalPrice = await this.totalPriceTxt.getByText(/^\$/).last().textContent();
+        const totalPrice = await this.totalPriceTxt.last().textContent();
 
         if (!totalPrice) throw Error("total price not appeared on the page");
         const price = totalPrice.replace(/[^0-9.]/g, '');

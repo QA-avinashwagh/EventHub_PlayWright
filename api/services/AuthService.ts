@@ -1,6 +1,6 @@
 import { AuthClient } from "../clients/AuthClient";
-import { LoginSuccessResponse } from "../models/auth/response/LoginSuccessResponse";
-import { LoginFailureResponse } from "../models/auth/response/LoginFailureResponse";
+import { LoginSuccessResponse } from "../models/Auth/response/LoginSuccessResponse";
+import { LoginFailureResponse } from "../models/Auth/response/LoginFailureResponse";
 
 export class AuthService {
 
