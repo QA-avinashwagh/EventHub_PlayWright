@@ -12,10 +12,10 @@ test("should be able to book event created by API", async ({ authSetup, eventRes
     const bookingForm = eventDetailPage.bookingForm();
     await bookingForm.book(user.Details.davidUser.fullName, user.Details.davidUser.email, user.Details.davidUser.phoneNumber)
 
-    await expect(bookingForm.bookingConfirmMessage).toBeVisible();
-    const refId = await bookingForm.getBookingRefId();
+    await expect(eventDetailPage.bookingConfirmMessage).toBeVisible();
+    const refId = await eventDetailPage.getBookingRefId();
 
-    await bookingForm.viewBooking();
+    await eventDetailPage.viewBooking();
     const bookingCard  = myBookingPage.findBooking(refId);
     const myBookingRefId = bookingCard.getBookingId();
 
@@ -58,7 +58,7 @@ test("Should be displayed booking created and booked by API", async ({ authSetup
 
     await myBookingPage.goTo();
     const bookingCard = myBookingPage.findBooking(refID);
-    expect (bookingCard.getBookingId()).toBe(refID);
+    expect (await bookingCard.getBookingId()).toBe(refID);
     await expect(bookingCard.root).toBeVisible();
 
 })
@@ -78,7 +78,7 @@ test("should be able to update seat count after UI booking", async ({ authSetup,
     await bookingForm.increaseTicketCount();
 
     await bookingForm.book(user.Details.davidUser.fullName, user.Details.davidUser.email, user.Details.davidUser.phoneNumber);
-    await expect(bookingForm.bookingConfirmMessage).toBeVisible();
+    await expect(eventDetailPage.bookingConfirmMessage).toBeVisible();
 
     const getResponse = await eventService.getEvent(eventId);
     if (getResponse.status !== 200) {
@@ -105,10 +105,10 @@ test("should be able to cancel the booking created by API ", async ({authSetup, 
     const bookingForm = eventDetailPage.bookingForm();
     await bookingForm.book(user.Details.davidUser.fullName, user.Details.davidUser.email, user.Details.davidUser.phoneNumber)
 
-    await expect(bookingForm.bookingConfirmMessage).toBeVisible();
-    const refId = await bookingForm.getBookingRefId();
+    await expect(eventDetailPage.bookingConfirmMessage).toBeVisible();
+    const refId = await eventDetailPage.getBookingRefId();
 
-    await bookingForm.viewBooking();
+    await eventDetailPage.viewBooking();
 
     // Checking count when Event is booked
     const getResponse = await eventService.getEvent(eventId);

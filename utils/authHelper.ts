@@ -19,14 +19,14 @@ export class AuthHelper  {
                 .setItem("eventhub_token", token)
         }, token); 
 
-    //     console.log(
-    //             await page.evaluate(() =>
-    //                     Object.entries(localStorage)
-    //     )
-    // );
+        console.log(
+                await page.evaluate(() =>
+                        Object.entries(localStorage)
+        )
+    );
     
-        // console.log(page.url());
-        // await page.waitForTimeout(5000);
+        console.log(page.url());
+        await page.waitForTimeout(5000);
 
         await page.goto("/");
         return page;

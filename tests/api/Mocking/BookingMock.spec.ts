@@ -144,8 +144,8 @@ validateHeaderName
 
     await bookingForm.confirmBooking();
 
-    await expect(bookingForm.bookingConfirmMessage).toBeVisible();
-    const refId = await bookingForm.getBookingRefId();
+    await expect(eventDetailPage.bookingConfirmMessage).toBeVisible();
+    const refId = await eventDetailPage.getBookingRefId();
 
     await page.route('**api/bookings*', async (route) => {
 
@@ -192,7 +192,7 @@ validateHeaderName
         });
     });
 
-    await bookingForm.viewBooking();
+    await eventDetailPage.viewBooking();
 
     await expect(myBookingPage.findBooking(refId).root).toBeVisible();
 })

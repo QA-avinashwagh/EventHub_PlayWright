@@ -1,6 +1,6 @@
 import { expect, test } from "../../fixtures/ApiFixture";
 import { generateEventPayload } from "../../utils/factories/eventFactory";
-import { cleanupEvent } from "../../utils/CleanUpHelper";
+import { cleanupEvent } from "../../utils/CleanupHelper";
 import user from "../../test_data/bookingUserDetails.json";
 
 test.describe("API+UI", () => {
@@ -24,7 +24,7 @@ test.describe("API+UI", () => {
             await eventPage.goTo();
             const eventCard = eventPage.findEvent(payload.title);
             await expect(eventCard.root).toBeVisible();
-             expect(eventCard.getPrice()).toBe(payload.price);
+             expect(await eventCard.getPrice()).toBe(payload.price);
 
         } finally {
             await cleanupEvent(eventService, eventID);
@@ -51,7 +51,7 @@ test.describe("API+UI", () => {
             await eventPage.goTo();
             const eventCard = eventPage.findEvent(updatePayload.title);
             await expect(eventCard.root).toBeVisible();
-            expect(eventCard.getPrice).toBe(payload.price);
+            expect(await eventCard.getPrice()).toBe(payload.price);
         } finally {
             await cleanupEvent(eventService, eventID);
         }
@@ -143,10 +143,10 @@ test.describe("API+UI", () => {
             const bookingForm = eventDetailPage.bookingForm();
             await bookingForm.book(user.Details.sarahUser.fullName, user.Details.sarahUser.email, user.Details.sarahUser.phoneNumber);
 
-            await expect(bookingForm.bookingConfirmMessage).toBeVisible();
-            const refId = await bookingForm.getBookingRefId();
+            await expect(eventDetailPage.bookingConfirmMessage).toBeVisible();
+            const refId = await eventDetailPage.getBookingRefId();
 
-            await bookingForm.viewBooking()
+            await eventDetailPage.viewBooking()
 
             const myBooking =  myBookingPage.findBooking(refId);
             const myBookingRefId = await myBooking.getBookingId();
