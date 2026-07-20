@@ -17,7 +17,7 @@ test("should be able to book event created by API", async ({ authSetup, eventRes
 
     await eventDetailPage.viewBooking();
     const bookingCard  = myBookingPage.findBooking(refId);
-    const myBookingRefId = bookingCard.getBookingId();
+    const myBookingRefId = await bookingCard.getBookingId();
 
     expect(refId).toBe(myBookingRefId);
     await expect(bookingCard.root).toBeVisible();
